@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+
+/* Import the Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+/* Reset default browser styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    background-color: #ecf0f1; /* Very light gray background */
+}
+
+/* Ensure the main application container uses flex to manage content below the navbar */
+app-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Basic Heading and Link Styles */
+h1, h2, h3 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+a {
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #bdc3c7;
+    margin: 20px 0;
+}
