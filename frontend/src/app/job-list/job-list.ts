@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService, Job } from '../api.service'; // Import the service and the Job interface
+import { ApiService, Job } from '../api.service'; 
 import { Observable } from 'rxjs';
 
 @Component({
@@ -11,17 +11,31 @@ import { Observable } from 'rxjs';
   styleUrls: ['./job-list.scss']
 })
 export class JobListComponent implements OnInit {
-  // This will hold our "live" stream of jobs from the service
+  
   public jobs$: Observable<Job[]>;
 
+  // --- NEW: Toggle Logic ---
+  // This will store the ID of the job we want to show the analysis for.
+  // We use "number | null" so it can be empty (no job selected).
+  public visibleAnalysisId: number | null = null;
+  // -------------------------
+
   constructor(private apiService: ApiService) {
-    // In the constructor, we connect our local 'jobs$' to the one in the service.
-    // The data will flow automatically from here.
     this.jobs$ = this.apiService.getJobs();
   }
 
-  ngOnInit(): void {
-    // You can also just assign it here, both work!
-    // this.jobs$ = this.apiService.getJobs();
+  ngOnInit(): void { }
+
+  // --- NEW: Toggle Function ---
+  // This function will be called when the user clicks the "See AI Analysis" button.
+  toggleAnalysis(jobId: number) {
+    if (this.visibleAnalysisId === jobId) {
+      // If it's already visible, hide it (set to null)
+      this.visibleAnalysisId = null;
+    } else {
+      // If it's hidden, show it (set to the job's ID)
+      this.visibleAnalysisId = jobId;
+    }
   }
+  // ----------------------------
 }
