@@ -36,6 +36,16 @@
       </select>
     </div>
 
+    <!-- NEW: Job Description Field -->
+    <div class="form-field">
+      <label for="jobDescription">Job Description</label>
+      <textarea id="jobDescription" formControlName="jobDescription" rows="8"></textarea>
+      <!-- Validation Error Message -->
+      <div *ngIf="f['jobDescription'].touched && f['jobDescription'].invalid" class="error-msg">
+        Job description is required.
+      </div>
+    </div>
+
     <!-- Notes Field -->
     <div class="form-field">
       <label for="notes">Notes (Optional)</label>
@@ -47,10 +57,7 @@
       {{ isSubmitting ? 'Saving...' : 'Save Application' }}
     </button>
 
-    <!-- 
-      Submission Status Message 
-      THIS IS THE ONLY LINE THAT CHANGES
-    -->
+    <!-- Submission Status Message -->
     <div *ngIf="submitMessage" class="submit-msg" [class.error-msg]="isError">
       {{ submitMessage }}
     </div>
