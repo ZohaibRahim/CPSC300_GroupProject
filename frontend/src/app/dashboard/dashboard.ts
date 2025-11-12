@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service'; 
 import { CommonModule } from '@angular/common'; 
-// No longer need RouterLink here, so it's removed.
-import { JobFormComponent } from '../job-form/job-form'; // <-- IMPORT the new form component
+import { JobFormComponent } from '../job-form/job-form';
+import { JobListComponent } from '../job-list/job-list'; // <-- FIXED: Removed '.component' from the path
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     CommonModule, 
-    JobFormComponent // <-- ADD the new form component to imports
+    JobFormComponent,
+    JobListComponent // <-- This will now work because the import is fixed
   ], 
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -21,16 +22,13 @@ export class DashboardComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    console.log('Dashboard loading. Initiating backend health check (MOCK).');
-    
+    // ... (health check logic is unchanged) ...
     this.apiService.checkHealth().subscribe({
       next: (response) => {
         this.healthStatus = `✅ Backend Connected (MOCK)! Response: ${JSON.stringify(response)}`;
-        console.log('Simulated health check success:', response);
       },
       error: (err) => {
         this.healthStatus = `❌ Error in Mocking: ${err.message}`;
-        console.error('Mocking error:', err);
       }
     });
   }

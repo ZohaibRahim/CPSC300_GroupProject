@@ -1,0 +1,78 @@
+.list-container {
+  max-width: 100%;
+  margin: 2rem auto;
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.empty-list {
+  text-align: center;
+  padding: 2rem;
+  background-color: #fcfdff;
+  border: 1px dashed #dcdfe4;
+  border-radius: 8px;
+  color: #5a738c;
+}
+
+.job-card {
+  background: #ffffff;
+  border: 1px solid #eef2f6;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.job-card h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.job-card .company {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #5a738c;
+}
+
+.job-card .notes {
+  margin: 0;
+  color: #34495e;
+  font-size: 0.95rem;
+}
+
+.status-badge {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+
+  // Dynamic status colors
+  &.status-applied { background-color: #3498db; }
+  &.status-interviewing { background-color: #f39c12; }
+  &.status-offer { background-color: #2ecc71; }
+  &.status-rejected { background-color: #e74c3c; }
+}
