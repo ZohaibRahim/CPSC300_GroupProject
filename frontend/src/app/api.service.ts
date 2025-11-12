@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay, BehaviorSubject, tap, map } from 'rxjs';
+// NEW: Import 'throwError' to simulate an error
+import { Observable, of, delay, BehaviorSubject, tap, map, throwError } from 'rxjs'; 
 
-// --- Define what a "Job" looks like ---
+// (Job interface is unchanged)
 export interface Job {
   id: number; 
   company: string;
   title: string;
   status: string;
   notes?: string;
-  aiAnalysis?: string; // <-- NEW: Placeholder for Sara's AI data
+  aiAnalysis?: string; 
 }
-// ----------------------------------------
 
 const BACKEND_URL = 'http://localhost:3000';
 
@@ -20,7 +20,7 @@ const BACKEND_URL = 'http://localhost:3000';
 })
 export class ApiService {
 
-  // --- Mock Database ---
+  // (Mock data and health check are unchanged)
   private mockJobList: Job[] = [
     { 
       id: 1, 
@@ -28,7 +28,7 @@ export class ApiService {
       title: 'Software Engineer', 
       status: 'Interviewing', 
       notes: 'First round done.',
-      aiAnalysis: 'Your resume is a 92% match. Keywords "React" and "Go" are strong, but "Data Structures" is missing.' // <-- NEW
+      aiAnalysis: 'Your resume is a 92% match. Keywords "React" and "Go" are strong, but "Data Structures" is missing.'
     },
     { 
       id: 2, 
@@ -36,32 +36,40 @@ export class ApiService {
       title: 'Frontend Developer', 
       status: 'Applied', 
       notes: 'Sent resume.',
-      aiAnalysis: 'Your resume is a 78% match. Add more quantifiable achievements to stand out.' // <-- NEW
+      aiAnalysis: 'Your resume is a 78% match. Add more quantifiable achievements to stand out.'
     }
   ];
   private nextJobId = 3;
-
   private jobs$ = new BehaviorSubject<Job[]>(this.mockJobList);
 
   constructor(private http: HttpClient) { }
-
-  // --- OLD HEALTH CHECK (Unchanged) ---
-  checkHealth(): Observable<any> {
+  
+  checkHealth(): Observable<any> { 
     const mockResponse = { status: 'ok', message: 'Simulated connection success.' };
     return of(mockResponse).pipe(delay(500)); 
   }
-
-  // --- Get All Jobs (Unchanged) ---
-  getJobs(): Observable<Job[]> {
+  
+  getJobs(): Observable<Job[]> { 
     return this.jobs$.asObservable();
   }
 
-  // --- Create a New Job (Updated) ---
+  // --- UPDATED: Create a New Job ---
   createJob(jobData: { company: string, title: string, status: string, notes?: string }): Observable<Job> {
+    
+    // --- NEW: FAILURE TEST ---
+    // If the company name is "fail", we simulate a 500 server error.
+    if (jobData.company.toLowerCase() === 'fail') {
+      console.log('--- SIMULATING 500 SERVER ERROR ---');
+      // We return an Error Observable instead of a success (of)
+      return throwError(() => new Error('Simulated 500 Server Error: Could not save job.')).pipe(delay(500));
+    }
+    // -------------------------
+
+    // (This is the normal, successful path)
     const newJob: Job = {
       id: this.nextJobId++,
       ...jobData,
-      aiAnalysis: 'Analysis pending... (This is a mock response for a new job)' // <-- NEW: Default AI response
+      aiAnalysis: 'Analysis pending... (This is a mock response for a new job)'
     };
 
     this.mockJobList.push(newJob);

@@ -47,8 +47,11 @@
       {{ isSubmitting ? 'Saving...' : 'Save Application' }}
     </button>
 
-    <!-- Submission Status Message -->
-    <div *ngIf="submitMessage" class="submit-msg">
+    <!-- 
+      Submission Status Message 
+      THIS IS THE ONLY LINE THAT CHANGES
+    -->
+    <div *ngIf="submitMessage" class="submit-msg" [class.error-msg]="isError">
       {{ submitMessage }}
     </div>
   </form>
