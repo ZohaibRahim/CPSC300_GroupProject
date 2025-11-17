@@ -1,0 +1,14 @@
+<!-- **NAVBAR** -->
+<nav class="app-navbar">
+  <h1>Markhor Job Tracker</h1>
+  <div class="nav-links">
+    <a [routerLink]="['/dashboard']">Dashboard</a> 
+    <a [routerLink]="['/profile']">My Resume</a> <!-- <-- NEW: Add Profile Link -->
+    <a [routerLink]="['/login']">Login/Register</a>
+  </div>
+</nav>
+
+<main class="content">
+  <!-- This is where Angular displays the content of the active route -->
+  <router-outlet></router-outlet>
+</main>
