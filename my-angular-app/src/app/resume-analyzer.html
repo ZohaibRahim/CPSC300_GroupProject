@@ -1,0 +1,285 @@
+<!-- resume-analyzer.html -->
+<div class="analyzer-container">
+  <h2>AI-Powered Resume Analyzer</h2>
+  <p class="subtitle">Upload your resume and get AI-powered optimization suggestions</p>
+
+  <!-- AI Provider Selection -->
+  <div class="provider-selector">
+    <label>AI Provider:</label>
+    <select [(ngModel)]="currentProvider" (change)="changeProvider(currentProvider)">
+      <option [value]="'backend'">Backend (Recommended)</option>
+      <option [value]="'openai'">OpenAI (Direct)</option>
+      <option [value]="'huggingface'">Hugging Face</option>
+    </select>
+    <small class="provider-note">Backend option is most secure (API keys hidden)</small>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-banner">
+    <strong>⚠️ Error:</strong> {{ errorMessage }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isProcessing" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>{{ currentStep === 'upload' ? 'Parsing resume...' : 'Optimizing resume...' }}</p>
+  </div>
+
+  <!-- STEP 1: Upload Resume -->
+  <div *ngIf="currentStep === 'upload'" class="step-container">
+    <div class="upload-section">
+      <h3>Step 1: Upload Your Resume</h3>
+      
+      <div class="file-input-wrapper">
+        <label for="resume-file" class="file-label">
+          <span class="file-icon">📎</span>
+          <span>{{ selectedFile ? selectedFile.name : 'Choose file or paste text below' }}</span>
+        </label>
+        <input 
+          type="file" 
+          id="resume-file" 
+          accept=".txt,.pdf,.doc,.docx"
+          (change)="onFileSelected($event)"
+        >
+      </div>
+
+      <div class="divider">OR</div>
+
+      <div class="text-input-section">
+        <label for="resume-text">Paste your resume text:</label>
+        <textarea 
+          id="resume-text" 
+          [(ngModel)]="resumeText" 
+          rows="15"
+          placeholder="Paste your complete resume here..."
+        ></textarea>
+      </div>
+
+      <button 
+        class="btn btn-primary" 
+        (click)="parseResume()"
+        [disabled]="!resumeText.trim() || isProcessing"
+      >
+        Parse Resume with AI
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 2: View Parsed Resume & Enter Job Details -->
+  <div *ngIf="currentStep === 'parsed' && parsedResume" class="step-container">
+    <div class="parsed-section">
+      <h3>Step 2: Review Parsed Information</h3>
+      
+      <div class="parsed-data">
+        <!-- Personal Info -->
+        <div class="info-card">
+          <h4>Personal Information</h4>
+          <p><strong>Name:</strong> {{ parsedResume.personalInfo.name || 'Not found' }}</p>
+          <p><strong>Email:</strong> {{ parsedResume.personalInfo.email || 'Not found' }}</p>
+          <p><strong>Phone:</strong> {{ parsedResume.personalInfo.phone || 'Not found' }}</p>
+          <p><strong>Location:</strong> {{ parsedResume.personalInfo.location || 'Not found' }}</p>
+        </div>
+
+        <!-- Skills -->
+        <div class="info-card">
+          <h4>Skills Detected</h4>
+          <div class="skill-tags">
+            <span *ngFor="let skill of parsedResume.skills.technical" class="skill-tag technical">
+              {{ skill }}
+            </span>
+            <span *ngFor="let skill of parsedResume.skills.soft" class="skill-tag soft">
+              {{ skill }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="info-card" *ngIf="parsedResume.experience.length > 0">
+          <h4>Work Experience ({{ parsedResume.experience.length }} positions)</h4>
+          <div *ngFor="let exp of parsedResume.experience" class="experience-item">
+            <p class="exp-title">{{ exp.title }} at {{ exp.company }}</p>
+            <p class="exp-duration">{{ exp.duration }}</p>
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div class="info-card" *ngIf="parsedResume.education.length > 0">
+          <h4>Education</h4>
+          <div *ngFor="let edu of parsedResume.education" class="education-item">
+            <p>{{ edu.degree }} in {{ edu.field }}</p>
+            <p class="edu-school">{{ edu.institution }} ({{ edu.year }})</p>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Job Description Input -->
+      <div class="job-input-section">
+        <h3>Step 3: Enter Target Job Details</h3>
+        
+        <div class="form-row">
+          <div class="form-field">
+            <label for="job-title">Job Title *</label>
+            <input 
+              id="job-title" 
+              type="text" 
+              [(ngModel)]="jobTitle"
+              placeholder="e.g., Senior Software Engineer"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="job-company">Company (Optional)</label>
+            <input 
+              id="job-company" 
+              type="text" 
+              [(ngModel)]="jobCompany"
+              placeholder="e.g., Google"
+            >
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="job-desc">Job Description *</label>
+          <textarea 
+            id="job-desc" 
+            [(ngModel)]="jobDescription" 
+            rows="8"
+            placeholder="Paste the full job description here..."
+          ></textarea>
+        </div>
+
+        <div class="form-field">
+          <label for="job-req">Requirements (One per line)</label>
+          <textarea 
+            id="job-req" 
+            [(ngModel)]="jobRequirements" 
+            rows="5"
+            placeholder="Bachelor's degree in Computer Science&#10;5+ years of experience&#10;Proficiency in React and Node.js"
+          ></textarea>
+        </div>
+
+        <div class="form-field">
+          <label for="job-skills">Preferred Skills (Comma separated)</label>
+          <input 
+            id="job-skills" 
+            type="text" 
+            [(ngModel)]="jobPreferredSkills"
+            placeholder="TypeScript, AWS, Docker, CI/CD"
+          >
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" (click)="reset()">Start Over</button>
+          <button 
+            class="btn btn-primary" 
+            (click)="optimizeResume()"
+            [disabled]="!jobTitle || !jobDescription || isProcessing"
+          >
+            Optimize Resume with AI
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: View Optimization Results -->
+  <div *ngIf="currentStep === 'optimized' && optimizationResults" class="step-container">
+    <div class="results-section">
+      <h3>Optimization Results</h3>
+
+      <!-- Score Cards -->
+      <div class="score-cards">
+        <div class="score-card" [ngClass]="getScoreClass(optimizationResults.overallScore)">
+          <h4>Overall Score</h4>
+          <div class="score-value">{{ optimizationResults.overallScore }}/100</div>
+        </div>
+
+        <div class="score-card" [ngClass]="getScoreClass(optimizationResults.matchPercentage)">
+          <h4>Job Match</h4>
+          <div class="score-value">{{ optimizationResults.matchPercentage }}%</div>
+        </div>
+
+        <div class="score-card" [ngClass]="getScoreClass(optimizationResults.atsCompatibility.score)">
+          <h4>ATS Score</h4>
+          <div class="score-value">{{ optimizationResults.atsCompatibility.score }}/100</div>
+        </div>
+      </div>
+
+      <!-- Strengths -->
+      <div class="results-card strengths">
+        <h4>Your Strengths</h4>
+        <ul>
+          <li *ngFor="let strength of optimizationResults.strengths">{{ strength }}</li>
+        </ul>
+      </div>
+
+      <!-- Weaknesses -->
+      <div class="results-card weaknesses">
+        <h4>Areas to Improve</h4>
+        <ul>
+          <li *ngFor="let weakness of optimizationResults.weaknesses">{{ weakness }}</li>
+        </ul>
+      </div>
+
+      <!-- Missing Keywords -->
+      <div class="results-card keywords" *ngIf="optimizationResults.missingKeywords.length > 0">
+        <h4>Missing Important Keywords</h4>
+        <div class="keyword-tags">
+          <span *ngFor="let keyword of optimizationResults.missingKeywords" class="keyword-tag">
+            {{ keyword }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Suggested Improvements -->
+      <div class="results-card improvements">
+        <h4>Specific Improvement Suggestions</h4>
+        <div *ngFor="let improvement of optimizationResults.suggestedImprovements" class="improvement-item">
+          <h5>{{ improvement.section | titlecase }}</h5>
+          <div class="comparison">
+            <div class="current">
+              <strong>Current:</strong>
+              <p>{{ improvement.current }}</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="suggested">
+              <strong>Suggested:</strong>
+              <p>{{ improvement.suggested }}</p>
+            </div>
+          </div>
+          <p class="reason"><em>Why: {{ improvement.reason }}</em></p>
+        </div>
+      </div>
+
+      <!-- Optimized Summary -->
+      <div class="results-card summary" *ngIf="optimizationResults.optimizedSummary">
+        <h4>AI-Generated Optimized Summary</h4>
+        <p class="optimized-text">{{ optimizationResults.optimizedSummary }}</p>
+        <button class="btn btn-sm" (click)="exportResume()">Copy to Clipboard</button>
+      </div>
+
+      <!-- ATS Recommendations -->
+      <div class="results-card ats-tips">
+        <h4>ATS Compatibility Tips</h4>
+        <ul>
+          <li *ngFor="let rec of optimizationResults.atsCompatibility.recommendations">{{ rec }}</li>
+        </ul>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-secondary" (click)="currentStep = 'parsed'">
+          ← Back to Edit Job Details
+        </button>
+        <button class="btn btn-primary" (click)="exportResume()">
+          Export Optimized Resume
+        </button>
+        <button class="btn btn-secondary" (click)="reset()">
+          Analyze Another Resume
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
