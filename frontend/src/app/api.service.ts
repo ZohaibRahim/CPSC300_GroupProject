@@ -52,10 +52,10 @@ export class ApiService {
   constructor(private http: HttpClient) { }
   
   // --- Job Functions (Unchanged) ---
-  checkHealth(): Observable<any> { 
-    const mockResponse = { status: 'ok', message: 'Simulated connection success.' };
-    return of(mockResponse).pipe(delay(500)); 
+  checkHealth(): Observable<any> {
+    return this.http.get<any>(`${BACKEND_URL}/health`);
   }
+
   getJobs(): Observable<Job[]> { return this.jobs$.asObservable(); }
   createJob(jobData: any): Observable<Job> { 
     if (jobData.company.toLowerCase() === 'fail') {
@@ -73,16 +73,16 @@ export class ApiService {
 
   // --- NEW: Resume Functions ---
 
-  /**
-   * Gets the user's master resume.
-   */
+  
+  // * Gets the user's master resume.
+   
   getResume(): Observable<string> {
     return this.resume$.asObservable();
   }
 
-  /**
-   * Saves the user's master resume.
-   */
+ 
+  // * Saves the user's master resume.
+   
   saveResume(resumeText: string): Observable<{success: boolean, message: string}> {
     // Simulate a 400ms API call
     this.mockMasterResume = resumeText;
