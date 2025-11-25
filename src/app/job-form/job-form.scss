@@ -1,16 +1,8 @@
-/* Matches the Global "Slate" Theme */
+/* --- Job List Styles (Slate Theme) --- */
 
-.form-container {
-  max-width: 600px;
+.list-container {
+  max-width: 100%;
   margin: 2rem auto;
-  padding: 2rem;
-  
-  background-color: var(--bg-card); 
-  border-radius: 12px;
-  box-shadow: var(--shadow-md); 
-  border: 1px solid var(--border-color); 
-  
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 h3 {
@@ -18,93 +10,183 @@ h3 {
   font-weight: 700;
   color: var(--text-main);
   margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-p {
-  color: var(--text-muted);
   margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
 }
 
-.form-field {
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-weight: 600;
-  color: var(--text-main); 
-  margin-bottom: 0.5rem;
-}
-
-/* Input Styles */
-input[type="text"],
-select,
-textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-  
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  
-  /* Use app background color for inputs to create contrast against the card */
-  background-color: var(--bg-app); 
-  color: var(--text-main); 
-  
-  transition: all 0.2s ease-in-out;
-  box-sizing: border-box;
-}
-
-input[type="text"]:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Subtle blue glow */
-}
-
-/* Button Styles */
-.submit-btn {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #ffffff; 
-  background-color: var(--primary-color);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: var(--shadow-sm);
-}
-
-.submit-btn:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.submit-btn:disabled {
-  background-color: var(--border-color);
-  color: var(--text-muted);
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.error-msg {
-  color: #ef4444; /* Standard Red */
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-  font-weight: 500;
-}
-
-.submit-msg {
+.empty-list {
   text-align: center;
-  margin-top: 1rem;
+  padding: 2rem;
+  background-color: var(--bg-card);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  color: var(--text-muted);
+}
+
+/* --- Card Styles --- */
+.job-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1rem;
+  transition: all 0.2s ease-in-out;
+  
+  padding: 0; 
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* Main Card Layout */
+.job-card-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Aligns items to the top */
+  padding: 1.5rem;
+  gap: 1rem;
+}
+
+.job-info {
+  flex: 1; /* Takes up all available space */
+}
+
+.job-card h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-main);
+}
+
+.job-card .company {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.job-card .notes {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* Status Badge */
+.status-badge {
+  align-self: flex-start;
+  padding: 0.35rem 0.85rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap; /* Prevents text wrapping */
+
+  /* Status Colors */
+  &.status-applied { background-color: #3b82f6; }      /* Blue */
+  &.status-interviewing { background-color: #f59e0b; } /* Amber */
+  &.status-offer { background-color: #10b981; }        /* Emerald */
+  &.status-rejected { background-color: #ef4444; }     /* Red */
+}
+
+/* --- Action Buttons (Edit / Delete) --- */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+.btn-icon {
+  background-color: var(--bg-app); /* Subtle contrast against card */
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 8px;
+  
+  /* Centers the SVG Icon */
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  
+  /* CHANGED: Use --text-main so icons are White in Dark Mode / Dark in Light Mode */
+  color: var(--text-main); 
+  transition: all 0.2s;
+
+  svg {
+    transition: stroke 0.2s;
+  }
+
+  &:hover {
+    background-color: var(--hover-item);
+    transform: translateY(-2px);
+    /* No color change needed here, keeps it sharp */
+  }
+
+  /* Specific Delete Hover */
+  &.delete:hover {
+    border-color: #ef4444; 
+    background-color: rgba(239, 68, 68, 0.1); 
+    color: #ef4444; /* Turns Red on hover */
+  }
+
+  /* Specific Edit Hover */
+  &.edit:hover {
+    border-color: var(--primary-color);
+    background-color: var(--active-item);
+    color: var(--primary-color); /* Turns Blue on hover */
+  }
+}
+
+/* --- AI Toggle Bar --- */
+.ai-toggle-bar {
+  background-color: var(--bg-app);
+  border-top: 1px solid var(--border-color);
+  padding: 0.75rem 1.5rem;
+  text-align: right;
+}
+
+.ai-button {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+
+  &:hover {
+    color: var(--primary-hover);
+  }
+}
+
+.ai-button-icon {
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+}
+
+/* --- AI Content Area --- */
+.ai-placeholder {
+  background-color: var(--active-item); /* Tinted background */
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem;
+}
+
+.ai-placeholder .ai-title {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.ai-placeholder p {
+  margin: 0;
+  color: var(--text-main);
+  line-height: 1.6;
 }
