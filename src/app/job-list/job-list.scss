@@ -1,3 +1,5 @@
+/* --- Job List Styles (Slate Theme) --- */
+
 .list-container {
   max-width: 100%;
   margin: 2rem auto;
@@ -6,51 +8,39 @@
 h3 {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--text-heading); 
+  color: var(--text-main);
   margin-top: 0;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--bg-body); 
+  border-bottom: 2px solid var(--border-color);
 }
 
 .empty-list {
   text-align: center;
   padding: 2rem;
-  background-color: var(--bg-input); 
-  border: 1px dashed var(--border-color); 
+  background-color: var(--bg-card);
+  border: 1px dashed var(--border-color);
   border-radius: 8px;
-  color: var(--text-muted); 
+  color: var(--text-muted);
 }
 
+/* --- Filter Bar Styles --- */
 .list-header {
   margin-bottom: 1.5rem;
 }
 
-h3 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-main);
-  margin-top: 0;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--border-color);
-}
-
-/* The Flex Container for Search & Filter */
 .filter-bar {
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap; /* Wraps on mobile */
+  flex-wrap: wrap;
 }
 
-/* Search Input Wrapper */
 .search-wrapper {
-  position: relative; /* Needed for absolute icon positioning */
-  flex: 2; /* Takes more space */
+  position: relative;
+  flex: 2;
   min-width: 250px;
 }
 
-/* The Magnifying Glass Icon */
 .search-icon {
   position: absolute;
   left: 12px;
@@ -61,17 +51,15 @@ h3 {
   display: flex;
 }
 
-/* Filter Dropdown Wrapper */
 .filter-wrapper {
   flex: 1;
   min-width: 180px;
 }
 
-/* Styling the Inputs (Matches Global Theme) */
 .search-wrapper input,
 .filter-wrapper select {
   width: 100%;
-  padding: 12px 16px 12px 40px; /* Extra Left Padding for the Icon */
+  padding: 12px 16px 12px 40px;
   font-size: 0.95rem;
   font-family: 'Inter', sans-serif;
   border: 1px solid var(--border-color);
@@ -88,77 +76,95 @@ h3 {
   }
 }
 
-/* Dropdown specifically doesn't need left padding */
 .filter-wrapper select {
   padding-left: 16px; 
   cursor: pointer;
 }
 
+/* --- Card Styles --- */
 .job-card {
-  background: var(--bg-card); 
-  border: 1px solid var(--border-light); 
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
-  box-shadow: 0 10px 25px var(--shadow-color); 
+  box-shadow: var(--shadow-sm);
   margin-bottom: 1rem;
   transition: all 0.2s ease-in-out;
-  
   padding: 0; 
   overflow: hidden;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 30px var(--shadow-color);
+    box-shadow: var(--shadow-md);
   }
 }
 
 .job-card-main {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; // Align to top
+  align-items: flex-start;
   padding: 1.5rem;
   gap: 1rem;
 }
 
 .job-info {
-  flex: 1; // Takes up remaining space
+  flex: 1;
 }
 
 .job-card h4 {
   margin: 0 0 0.25rem 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-main); 
+  color: var(--text-main);
 }
 
 .job-card .company {
   margin: 0 0 0.75rem 0;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--text-muted); 
+  color: var(--text-muted);
+}
+
+
+.job-card .deadline {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Space between icon and text */
+  
+  margin: 0 0 0.75rem 0; /* Same spacing as company */
+  font-size: 0.9rem;
+  color: var(--text-muted); /* Subtle color */
+  font-weight: 500;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: var(--primary-color); /* Nice blue accent for the icon */
+  }
 }
 
 .job-card .notes {
   margin: 0;
-  color: var(--text-main); 
+  color: var(--text-main);
   font-size: 0.95rem;
+  opacity: 0.8;
 }
 
 .status-badge {
   align-self: flex-start;
-  white-space: nowrap;
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 99px;
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   color: #fff;
-  margin-left: 1rem;
+  white-space: nowrap;
 
-  &.status-applied { background-color: #3498db; }
-  &.status-interviewing { background-color: #f39c12; }
-  &.status-offer { background-color: #2ecc71; }
-  &.status-rejected { background-color: #e74c3c; }
+  &.status-applied { background-color: #3b82f6; }      
+  &.status-interviewing { background-color: #f59e0b; } 
+  &.status-offer { background-color: #10b981; }        
+  &.status-rejected { background-color: #ef4444; }     
 }
+
 
 .actions {
   display: flex;
@@ -167,47 +173,92 @@ h3 {
 }
 
 .btn-icon {
-  background: none;
+  background-color: var(--bg-app);
   border: 1px solid var(--border-color);
   border-radius: 6px;
   cursor: pointer;
-  padding: 6px;
-  font-size: 1rem;
+  padding: 8px;
+  
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  
+  /* Default (Light Mode) Color */
+  color: var(--text-muted); 
   transition: all 0.2s;
-  background-color: var(--bg-app); // Slight contrast from card
+
+  svg {
+    transition: stroke 0.2s;
+  }
 
   &:hover {
     background-color: var(--hover-item);
+    color: var(--text-main);
     transform: translateY(-2px);
   }
 
   &.delete:hover {
-    border-color: #ef4444; // Red border on hover
-    background-color: #fef2f2; // Light red bg
+    border-color: #ef4444; 
+    background-color: rgba(239, 68, 68, 0.1); 
+    color: #ef4444;
   }
 
   &.edit:hover {
     border-color: var(--primary-color);
+    background-color: var(--active-item);
     color: var(--primary-color);
   }
 }
 
+
+:host-context(body.dark-theme) .btn-icon {
+  color: #ffffff !important; /* Force White Icon */
+  border-color: rgba(255, 255, 255, 0.2) !important; /* Light Border */
+  background-color: rgba(255, 255, 255, 0.05) !important; /* Light Glassy BG */
+
+  svg {
+    stroke: #ffffff !important; /* Force SVG Lines White */
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+
+  &.delete:hover {
+    color: #ef4444 !important;
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.2) !important;
+    svg { stroke: #ef4444 !important; }
+  }
+
+  &.edit:hover {
+    color: #60a5fa !important; /* Lighter Blue */
+    border-color: #60a5fa !important;
+    background-color: rgba(96, 165, 250, 0.2) !important;
+    svg { stroke: #60a5fa !important; }
+  }
+}
+
+/* --- AI Toggle Bar --- */
 .ai-toggle-bar {
-  background-color: var(--ai-bar-bg); 
-  border-top: 1px solid var(--border-light);
-  padding: 0.5rem 1.5rem;
+  background-color: var(--bg-app);
+  border-top: 1px solid var(--border-color);
+  padding: 0.75rem 1.5rem;
   text-align: right;
 }
 
 .ai-button {
   background: none;
   border: none;
-  color: var(--primary-color); 
+  color: var(--primary-color);
   font-weight: 600;
   font-size: 0.9rem;
   font-family: 'Inter', sans-serif;
   cursor: pointer;
   transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
 
   &:hover {
     color: var(--primary-hover);
@@ -215,25 +266,24 @@ h3 {
 }
 
 .ai-button-icon {
-  display: inline-block;
-  margin-left: 0.25rem;
+  margin-left: 0.5rem;
   font-size: 0.7rem;
 }
 
 .ai-placeholder {
-  background-color: var(--ai-box-bg); 
-  border-top: 1px solid var(--ai-box-border);
-  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  background-color: var(--active-item);
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem;
 }
 
 .ai-placeholder .ai-title {
-  color: var(--ai-title-color);
+  color: var(--primary-color);
   font-weight: 700;
   margin: 0 0 0.5rem 0;
 }
 
 .ai-placeholder p {
   margin: 0;
-  color: var(--ai-text-color);
-  line-height: 1.5;
+  color: var(--text-main);
+  line-height: 1.6;
 }
