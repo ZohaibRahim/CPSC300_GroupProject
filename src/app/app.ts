@@ -12,7 +12,7 @@ import { ApiService } from './api.service';
 })
 export class App implements OnInit {
   isSidebarCollapsed = false;
-  isDarkMode = false; // State for dark mode
+  isDarkMode = false; 
 
   constructor(
     private apiService: ApiService,
@@ -21,23 +21,32 @@ export class App implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 1. Check backend health (Existing)
     this.apiService.checkHealth().subscribe();
+
+    // 2. NEW: Load Theme Preference from LocalStorage
+    const savedTheme = localStorage.getItem('theme');
+    
+    // If the user previously set it to 'dark', apply it immediately
+    if (savedTheme === 'dark') {
+      this.isDarkMode = true;
+      this.renderer.addClass(this.document.body, 'dark-theme');
+    }
   }
 
   toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
-  // --- NEW: Dark Mode Logic ---
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
 
     if (this.isDarkMode) {
-      // Add 'dark-theme' class to the <body> tag
       this.renderer.addClass(this.document.body, 'dark-theme');
+      localStorage.setItem('theme', 'dark'); // <--- SAVE PREFERENCE
     } else {
-      // Remove it
       this.renderer.removeClass(this.document.body, 'dark-theme');
+      localStorage.setItem('theme', 'light'); // <--- SAVE PREFERENCE
     }
   }
 }
