@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService, Job } from '../api.service'; 
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-job-list',
@@ -15,7 +16,7 @@ export class JobListComponent implements OnInit {
   public jobs$: Observable<Job[]>;
   public visibleAnalysisId: number | null = null;
 
-  constructor(private apiService: ApiService) {
+  constructor(private apiService: ApiService, private router: Router) {
     this.jobs$ = this.apiService.getJobs();
   }
 
@@ -31,8 +32,7 @@ export class JobListComponent implements OnInit {
 
   // --- NEW: Action Handlers ---
   onEdit(jobId: number) {
-    // Placeholder for now
-    alert(`Edit functionality coming soon for Job #${jobId}!`);
+    this.router.navigate(['/edit-job', jobId]);
   }
 
   onDelete(jobId: number) {

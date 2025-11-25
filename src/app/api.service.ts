@@ -68,6 +68,27 @@ export class ApiService {
     return of(newJob).pipe(delay(200));
   }
 
+  getJob(id: number): Observable<Job | undefined> {
+    const job = this.mockJobList.find(j => j.id === id);
+    return of(job).pipe(delay(100)); // Simulate small network delay
+  }
+
+  // --- NEW: Update Existing Job ---
+  updateJob(id: number, updatedData: any): Observable<Job | null> {
+    const index = this.mockJobList.findIndex(j => j.id === id);
+    if (index !== -1) {
+      // Merge existing job with new data (preserving ID and AI analysis)
+      const updatedJob = { ...this.mockJobList[index], ...updatedData };
+      this.mockJobList[index] = updatedJob;
+      
+      // Update the stream so the list refreshes automatically
+      this.jobs$.next([...this.mockJobList]);
+      
+      return of(updatedJob).pipe(delay(200));
+    }
+    return of(null); // Job not found
+  }
+
   getResume(): Observable<string> {
     return this.resume$.asObservable();
   }

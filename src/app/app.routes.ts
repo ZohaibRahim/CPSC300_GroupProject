@@ -9,9 +9,10 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'add-job', component: JobFormComponent },
   
-  // --- NEW ROUTE ---
-  { path: 'cover-letter', component: CoverLetterComponent },
+  // --- NEW: Edit Route (Reuses the same component) ---
+  { path: 'edit-job/:id', component: JobFormComponent },
 
+  { path: 'cover-letter', component: CoverLetterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent },
   
