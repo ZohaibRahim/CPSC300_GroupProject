@@ -31,6 +31,18 @@
           <span class="icon">📄</span>
           <span class="label" *ngIf="!isSidebarCollapsed">My Resume</span>
         </a>
+
+        <hr class="sidebar-divider">
+
+        <button class="nav-item dark-mode-btn" (click)="toggleDarkMode()">
+          <span class="icon" *ngIf="!isDarkMode">🌙</span>
+          <span class="icon" *ngIf="isDarkMode">☀️</span>
+          
+          <span class="label" *ngIf="!isSidebarCollapsed">
+            {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+          </span>
+        </button>
+
       </nav>
     </aside>
 

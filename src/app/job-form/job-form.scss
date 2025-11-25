@@ -1,12 +1,14 @@
+/* Matches the Global "Slate" Theme */
+
 .form-container {
   max-width: 600px;
   margin: 2rem auto;
   padding: 2rem;
   
-  background: var(--bg-card); 
+  background-color: var(--bg-card); 
   border-radius: 12px;
-  box-shadow: 0 10px 25px var(--shadow-color); 
-  border: 1px solid var(--border-light); 
+  box-shadow: var(--shadow-md); 
+  border: 1px solid var(--border-color); 
   
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
@@ -14,7 +16,7 @@
 h3 {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--text-heading);
+  color: var(--text-main);
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
@@ -36,6 +38,7 @@ label {
   margin-bottom: 0.5rem;
 }
 
+/* Input Styles */
 input[type="text"],
 select,
 textarea {
@@ -46,7 +49,9 @@ textarea {
   
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  background-color: var(--bg-input); 
+  
+  /* Use app background color for inputs to create contrast against the card */
+  background-color: var(--bg-app); 
   color: var(--text-main); 
   
   transition: all 0.2s ease-in-out;
@@ -58,37 +63,40 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Subtle blue glow */
 }
 
+/* Button Styles */
 .submit-btn {
   width: 100%;
   padding: 0.85rem 1rem;
   font-size: 1.1rem;
   font-weight: 600;
   color: #ffffff; 
-  background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+  background-color: var(--primary-color);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .submit-btn:hover {
+  background-color: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .submit-btn:disabled {
-  background: #bdc3c7;
+  background-color: var(--border-color);
+  color: var(--text-muted);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
 .error-msg {
-  color: #e74c3c;
+  color: #ef4444; /* Standard Red */
   font-size: 0.9rem;
   margin-top: 0.5rem;
   font-weight: 500;
@@ -98,5 +106,5 @@ textarea:focus {
   text-align: center;
   margin-top: 1rem;
   font-weight: 600;
-  color: var(--text-heading);
+  color: var(--text-main);
 }
