@@ -20,12 +20,13 @@ export class JobFormComponent {
   constructor(
     private fb: FormBuilder, 
     private apiService: ApiService,
-    private router: Router // <-- Inject Router
+    private router: Router 
   ) {
     this.jobForm = this.fb.group({
       company: ['', Validators.required],
       title: ['', Validators.required],
       status: ['Applied', Validators.required],
+      deadline: [''], // <-- NEW: Add this control (default empty)
       jobDescription: ['', Validators.required],
       notes: ['']
     });

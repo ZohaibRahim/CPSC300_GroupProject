@@ -10,6 +10,7 @@ export interface Job {
   notes?: string;
   jobDescription?: string; 
   aiAnalysis?: string; 
+  deadline?: string;
 }
 
 const BACKEND_URL = 'http://localhost:3000';

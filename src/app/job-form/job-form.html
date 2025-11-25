@@ -15,6 +15,21 @@
       </div>
     </div>
 
+    <div class="form-field">
+      <label for="status">Status</label>
+      <select id="status" formControlName="status">
+        <option>Applied</option>
+        <option>Interviewing</option>
+        <option>Offer</option>
+        <option>Rejected</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="deadline">Application Deadline</label>
+      <input id="deadline" type="date" formControlName="deadline">
+    </div>
+
     <!-- Job Title Field -->
     <div class="form-field">
       <label for="title">Job Title</label>
