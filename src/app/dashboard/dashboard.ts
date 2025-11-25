@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service'; 
 import { CommonModule } from '@angular/common'; 
-// Removed JobFormComponent since it is now on a separate page
 import { JobListComponent } from '../job-list/job-list'; 
+import { Observable } from 'rxjs'; // <-- Import Observable
 
 @Component({
   selector: 'app-dashboard',
@@ -16,18 +16,22 @@ import { JobListComponent } from '../job-list/job-list';
 })
 export class DashboardComponent implements OnInit {
   
-  healthStatus: string = 'Checking backend connection...';
+  healthStatus: string = 'Checking...';
+  stats$: Observable<any> | undefined; // <-- NEW: Observable for stats
   
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
+    // 1. Load Stats
+    this.stats$ = this.apiService.getJobStats();
+
+    // 2. Check Health
     this.apiService.checkHealth().subscribe({
-      // FIXED: Added ': any' to satisfy strict mode
       next: (response: any) => {
-        this.healthStatus = `✅ Backend Connected (MOCK)! Response: ${JSON.stringify(response)}`;
+        this.healthStatus = `Online`;
       },
       error: (err: any) => {
-        this.healthStatus = `❌ Error in Mocking: ${err.message}`;
+        this.healthStatus = `Offline`;
       }
     });
   }

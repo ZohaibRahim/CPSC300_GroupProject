@@ -1,0 +1,74 @@
+/* Dashboard Statistics Grid */
+.stats-grid {
+  display: grid;
+  /* Auto-fit columns: At least 200px wide, fits as many as possible */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem; /* Space before job list */
+}
+
+.stat-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* Icon Circle Styling */
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Set Icon Size */
+  svg {
+    width: 32px;  
+    height: 32px;
+  }
+  
+  /* Just text color now */
+  &.blue    { color: #3b82f6; }
+  &.purple  { color: #8b5cf6; }
+  &.amber   { color: #f59e0b; }
+  &.emerald { color: #10b981; }
+}
+
+/* Text Info */
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+/* Bottom Status Text */
+.connection-status {
+  text-align: center;
+  opacity: 0.7;
+}

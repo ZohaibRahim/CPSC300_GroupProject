@@ -68,6 +68,19 @@ export class ApiService {
     return of(newJob).pipe(delay(200));
   }
 
+  getJobStats(): Observable<any> {
+    return this.jobs$.pipe(
+      map(jobs => {
+        return {
+          total: jobs.length,
+          applied: jobs.filter(j => j.status === 'Applied').length,
+          interviewing: jobs.filter(j => j.status === 'Interviewing').length,
+          offers: jobs.filter(j => j.status === 'Offer').length
+        };
+      })
+    );
+  }
+
   getJob(id: number): Observable<Job | undefined> {
     const job = this.mockJobList.find(j => j.id === id);
     return of(job).pipe(delay(100)); // Simulate small network delay
