@@ -4,10 +4,9 @@
   <div *ngIf="jobs$ | async as jobs; else loading">
     
     <div *ngIf="jobs.length === 0" class="empty-list">
-      <p>Your job list is empty. Add a new application above!</p>
+      <p>Your job list is empty. Add a new application in the sidebar!</p>
     </div>
 
-    <!-- Loop over the jobs and display them -->
     <div class="job-card" *ngFor="let job of jobs">
       <div class="job-card-main">
         <div class="job-info">
@@ -15,28 +14,31 @@
           <p class="company">{{ job.company }}</p>
           <p class="notes">{{ job.notes }}</p>
         </div>
+        
         <span class="status-badge status-{{ job.status | lowercase }}">{{ job.status }}</span>
+
+        <div class="actions">
+          <button class="btn-icon edit" (click)="onEdit(job.id)" title="Edit">
+            ✏️
+          </button>
+          <button class="btn-icon delete" (click)="onDelete(job.id)" title="Delete">
+            🗑️
+          </button>
+        </div>
+
       </div>
 
-      <!-- === NEW: AI SECTION === -->
       <div class="ai-toggle-bar">
-        <!-- This button calls our new (click) function -->
         <button class="ai-button" (click)="toggleAnalysis(job.id)">
           {{ visibleAnalysisId === job.id ? 'Hide' : 'Show' }} AI Analysis
           <span class="ai-button-icon">{{ visibleAnalysisId === job.id ? '▲' : '▼' }}</span>
         </button>
       </div>
       
-      <!-- 
-        This is the placeholder!
-        It only shows if the job's ID matches the 'visibleAnalysisId'
-        This completes your Week 3 task.
-      -->
       <div *ngIf="visibleAnalysisId === job.id" class="ai-placeholder">
         <p class="ai-title"><strong>AI Analysis (Mock Data):</strong></p>
         <p>{{ job.aiAnalysis }}</p>
       </div>
-      <!-- === END OF AI SECTION === -->
 
     </div>
 
