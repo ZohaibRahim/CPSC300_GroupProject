@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, delay, BehaviorSubject, tap, map, throwError } from 'rxjs'; 
 
+
 export interface Job {
   id: number; 
   company: string;
@@ -90,5 +91,21 @@ export class ApiService {
     }
     return of(false);
   }
-  // ----------------------------
+
+  generateCoverLetter(jobDescription: string): Observable<{ coverLetter: string }> {
+    const mockResponse = `Dear Hiring Manager,
+
+    I am writing to express my strong interest in this position. Based on the job description "${jobDescription.substring(0, 30)}...", I believe my skills in software development and my experience with Angular and Node.js make me a perfect fit for your team.
+
+    I have a proven track record of delivering high-quality code and collaborating effectively in agile environments. I am particularly excited about the opportunity to contribute to your company's mission.
+
+    Thank you for considering my application.
+
+    Sincerely,
+    [Your Name]`;
+
+    
+    return of({ coverLetter: mockResponse }).pipe(delay(1500));
+  }
+  
 }
