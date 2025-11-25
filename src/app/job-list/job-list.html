@@ -1,10 +1,41 @@
 <div class="list-container">
-  <h3>My Job Applications</h3>
+  <div class="list-header">
+    <h3>My Job Applications</h3>
+    
+    <div class="filter-bar">
+      <div class="search-wrapper">
+        <span class="search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </span>
+        <input 
+          type="text" 
+          placeholder="Search company or title..." 
+          [ngModel]="searchTerm$ | async" 
+          (ngModelChange)="onSearchChange($event)"
+        >
+      </div>
+
+      <div class="filter-wrapper">
+        <select 
+          [ngModel]="statusFilter$ | async" 
+          (ngModelChange)="onStatusChange($event)"
+        >
+          <option value="All">All Statuses</option>
+          <option value="Applied">Applied</option>
+          <option value="Interviewing">Interviewing</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+    </div>
+  </div>
   
-  <div *ngIf="jobs$ | async as jobs; else loading">
+  <div *ngIf="filteredJobs$ | async as jobs; else loading">
     
     <div *ngIf="jobs.length === 0" class="empty-list">
-      <p>Your job list is empty. Add a new application in the sidebar!</p>
+      <p>No jobs found matching your filters.</p>
     </div>
 
     <div class="job-card" *ngFor="let job of jobs">
@@ -18,7 +49,6 @@
         <span class="status-badge status-{{ job.status | lowercase }}">{{ job.status }}</span>
 
         <div class="actions">
-          
           <button class="btn-icon edit" (click)="onEdit(job.id)" title="Edit">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
               <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
@@ -31,7 +61,6 @@
             </svg>
           </button>
         </div>
-
       </div>
 
       <div class="ai-toggle-bar">
@@ -45,13 +74,10 @@
         <p class="ai-title"><strong>AI Analysis (Mock Data):</strong></p>
         <p>{{ job.aiAnalysis }}</p>
       </div>
-
     </div>
-
   </div>
 
   <ng-template #loading>
     <p>Loading job list...</p>
   </ng-template>
-
 </div>

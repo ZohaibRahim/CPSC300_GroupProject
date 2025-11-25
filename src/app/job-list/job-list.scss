@@ -22,6 +22,78 @@ h3 {
   color: var(--text-muted); 
 }
 
+.list-header {
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+/* The Flex Container for Search & Filter */
+.filter-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap; /* Wraps on mobile */
+}
+
+/* Search Input Wrapper */
+.search-wrapper {
+  position: relative; /* Needed for absolute icon positioning */
+  flex: 2; /* Takes more space */
+  min-width: 250px;
+}
+
+/* The Magnifying Glass Icon */
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  display: flex;
+}
+
+/* Filter Dropdown Wrapper */
+.filter-wrapper {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* Styling the Inputs (Matches Global Theme) */
+.search-wrapper input,
+.filter-wrapper select {
+  width: 100%;
+  padding: 12px 16px 12px 40px; /* Extra Left Padding for the Icon */
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  transition: all 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+}
+
+/* Dropdown specifically doesn't need left padding */
+.filter-wrapper select {
+  padding-left: 16px; 
+  cursor: pointer;
+}
+
 .job-card {
   background: var(--bg-card); 
   border: 1px solid var(--border-light); 
