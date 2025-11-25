@@ -11,7 +11,7 @@
   justify-content: space-between;
   height: 64px;
   padding: 0 24px;
-  background-color: var(--bg-sidebar); /* Matches sidebar color */
+  background-color: var(--bg-sidebar);
   border-bottom: 1px solid var(--border-color);
   transition: background-color 0.3s, border-color 0.3s;
   z-index: 50;
@@ -20,7 +20,62 @@
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px; /* Increased gap between hamburger and logo */
+}
+
+/* Logo Container */
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Space between Logo Image and Text */
+}
+
+/* The Logo Image */
+.app-logo {
+  height: 36px; /* Good height for a navbar */
+  width: auto;  /* Maintains aspect ratio */
+  border-radius: 6px; /* Slight rounding looks nice */
+  object-fit: contain;
+}
+
+/* The Text */
+.logo-text {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+  letter-spacing: -0.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 1.5rem;
+  display: flex;
+  padding: 4px;
+  border-radius: 4px;
+  
+  &:hover {
+    background-color: var(--hover-item);
+  }
+}
+
+.login-link {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  background-color: var(--bg-app);
+  border-radius: 6px;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: var(--hover-item);
+  }
 }
 
 .menu-btn {
