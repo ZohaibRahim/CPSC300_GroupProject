@@ -1,0 +1,103 @@
+/* Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+/* --- THEME VARIABLES --- */
+:root {
+    /* Light Mode Defaults */
+    --bg-body: #ecf0f1;
+    --bg-card: #ffffff;
+    --bg-input: #fcfdff;
+    --bg-element-alt: #f8f9fa;
+    
+    --text-main: #333333;
+    --text-muted: #5a738c;
+    --text-heading: #2c3e50;
+    
+    --border-color: #dcdfe4;
+    --border-light: #eef2f6;
+    
+    --primary-color: #3498db;
+    --primary-hover: #2980b9;
+    
+    --navbar-bg: #2c3e50;
+    --navbar-text: #ffffff;
+    
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    
+    /* AI Section Specifics (Light) */
+    --ai-bar-bg: #f9fafb;
+    --ai-box-bg: #fdfef0;
+    --ai-box-border: #e6dbb9;
+    --ai-title-color: #b98900;
+    --ai-text-color: #5d4f21;
+}
+
+/* Dark Mode Overrides */
+body.dark-mode {
+    --bg-body: #121212;
+    --bg-card: #1e1e1e;
+    --bg-input: #2c2c2c;
+    --bg-element-alt: #1a1a1a;
+    
+    --text-main: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --text-heading: #ffffff;
+    
+    --border-color: #444444;
+    --border-light: #333333;
+    
+    --primary-color: #5dade2;
+    --primary-hover: #3498db;
+    
+    --navbar-bg: #000000;
+    --navbar-text: #e0e0e0;
+    
+    --shadow-color: rgba(0, 0, 0, 0.5);
+
+    /* AI Section Specifics (Dark) */
+    --ai-bar-bg: #252525;
+    --ai-box-bg: #2c2c20;
+    --ai-box-border: #4a4a30;
+    --ai-title-color: #ffd700;
+    --ai-text-color: #dcdcdc;
+}
+
+/* Reset & Base Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    
+    /* Use variables for background and text */
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    
+    /* Smooth transition for theme switching */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+app-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    color: var(--text-heading);
+    margin-top: 0;
+    transition: color 0.3s ease;
+}
+
+a {
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 20px 0;
+    transition: background-color 0.3s ease;
+}

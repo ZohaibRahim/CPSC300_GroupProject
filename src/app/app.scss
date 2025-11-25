@@ -1,0 +1,120 @@
+// Reset
+html, body { height: 100%; margin: 0; }
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
+
+// --- Header Styles ---
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover { background-color: #f0f0f0; }
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.login-link {
+  text-decoration: none;
+  color: #3498db;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+  transition: background 0.2s;
+  &:hover { background-color: #f2f8fc; }
+}
+
+// --- Main Body Layout ---
+.main-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden; // Prevent double scrollbars
+}
+
+// --- Sidebar Styles ---
+.sidebar {
+  width: 240px;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e5e5; 
+  overflow-y: auto;
+  transition: width 0.2s ease-in-out;
+  padding-top: 12px;
+
+  &.collapsed {
+    width: 72px; // Collapsed width
+    
+    .nav-item {
+      justify-content: center;
+      padding: 16px 0;
+      
+      .icon { margin-right: 0; font-size: 1.4rem; }
+    }
+  }
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 48px;
+  text-decoration: none;
+  color: #0f0f0f;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  
+  &:hover {
+    background-color: #f2f2f2;
+  }
+
+  &.active-link {
+    background-color: #e5e5e5;
+    font-weight: 600;
+  }
+
+  .icon {
+    margin-right: 20px;
+    font-size: 1.2rem;
+  }
+}
+
+// --- Content Area ---
+.content-area {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}

@@ -1,0 +1,42 @@
+<div class="app-layout">
+  
+  <header class="app-header">
+    <div class="header-left">
+      <button class="menu-btn" (click)="toggleSidebar()">
+        <span class="hamburger-icon">☰</span>
+      </button>
+      <h1 class="logo">Markhor</h1>
+    </div>
+    
+    <div class="header-right">
+      <a [routerLink]="['/login']" class="login-link">Login</a>
+    </div>
+  </header>
+
+  <div class="main-body">
+    
+    <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
+      <nav>
+        <a [routerLink]="['/dashboard']" routerLinkActive="active-link" class="nav-item">
+          <span class="icon">🏠</span>
+          <span class="label" *ngIf="!isSidebarCollapsed">Dashboard</span>
+        </a>
+
+        <a [routerLink]="['/add-job']" routerLinkActive="active-link" class="nav-item">
+          <span class="icon">➕</span>
+          <span class="label" *ngIf="!isSidebarCollapsed">Add Application</span>
+        </a>
+
+        <a [routerLink]="['/profile']" routerLinkActive="active-link" class="nav-item">
+          <span class="icon">📄</span>
+          <span class="label" *ngIf="!isSidebarCollapsed">My Resume</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</div>

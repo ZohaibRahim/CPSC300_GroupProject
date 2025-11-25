@@ -1,0 +1,132 @@
+.list-container {
+  max-width: 100%;
+  margin: 2rem auto;
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-heading); 
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--bg-body); 
+}
+
+.empty-list {
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--bg-input); 
+  border: 1px dashed var(--border-color); 
+  border-radius: 8px;
+  color: var(--text-muted); 
+}
+
+.job-card {
+  background: var(--bg-card); 
+  border: 1px solid var(--border-light); 
+  border-radius: 12px;
+  box-shadow: 0 10px 25px var(--shadow-color); 
+  margin-bottom: 1rem;
+  transition: all 0.2s ease-in-out;
+  
+  padding: 0; 
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px var(--shadow-color);
+  }
+}
+
+.job-card-main {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem;
+}
+
+.job-info {
+  flex: 1;
+}
+
+.job-card h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main); 
+}
+
+.job-card .company {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted); 
+}
+
+.job-card .notes {
+  margin: 0;
+  color: var(--text-main); 
+  font-size: 0.95rem;
+}
+
+.status-badge {
+  align-self: flex-start;
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  margin-left: 1rem;
+
+  &.status-applied { background-color: #3498db; }
+  &.status-interviewing { background-color: #f39c12; }
+  &.status-offer { background-color: #2ecc71; }
+  &.status-rejected { background-color: #e74c3c; }
+}
+
+.ai-toggle-bar {
+  background-color: var(--ai-bar-bg); 
+  border-top: 1px solid var(--border-light);
+  padding: 0.5rem 1.5rem;
+  text-align: right;
+}
+
+.ai-button {
+  background: none;
+  border: none;
+  color: var(--primary-color); 
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--primary-hover);
+  }
+}
+
+.ai-button-icon {
+  display: inline-block;
+  margin-left: 0.25rem;
+  font-size: 0.7rem;
+}
+
+.ai-placeholder {
+  background-color: var(--ai-box-bg); 
+  border-top: 1px solid var(--ai-box-border);
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+}
+
+.ai-placeholder .ai-title {
+  color: var(--ai-title-color);
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.ai-placeholder p {
+  margin: 0;
+  color: var(--ai-text-color);
+  line-height: 1.5;
+}
