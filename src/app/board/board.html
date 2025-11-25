@@ -1,0 +1,80 @@
+<div class="board-container" cdkDropListGroup>
+  
+  <div class="board-column">
+    <div class="column-header status-applied">
+      <h3>Applied</h3>
+      <span class="count">{{ applied.length }}</span>
+    </div>
+    
+    <div class="column-list"
+         cdkDropList
+         id="Applied"
+         [cdkDropListData]="applied"
+         (cdkDropListDropped)="drop($event)">
+      
+      <div class="board-card" *ngFor="let job of applied" cdkDrag>
+        <h4>{{ job.title }}</h4>
+        <p class="company">{{ job.company }}</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="board-column">
+    <div class="column-header status-interviewing">
+      <h3>Interviewing</h3>
+      <span class="count">{{ interviewing.length }}</span>
+    </div>
+
+    <div class="column-list"
+         cdkDropList
+         id="Interviewing"
+         [cdkDropListData]="interviewing"
+         (cdkDropListDropped)="drop($event)">
+         
+      <div class="board-card" *ngFor="let job of interviewing" cdkDrag>
+        <h4>{{ job.title }}</h4>
+        <p class="company">{{ job.company }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="board-column">
+    <div class="column-header status-offer">
+      <h3>Offer</h3>
+      <span class="count">{{ offer.length }}</span>
+    </div>
+
+    <div class="column-list"
+         cdkDropList
+         id="Offer"
+         [cdkDropListData]="offer"
+         (cdkDropListDropped)="drop($event)">
+         
+      <div class="board-card" *ngFor="let job of offer" cdkDrag>
+        <h4>{{ job.title }}</h4>
+        <p class="company">{{ job.company }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="board-column">
+    <div class="column-header status-rejected">
+      <h3>Rejected</h3>
+      <span class="count">{{ rejected.length }}</span>
+    </div>
+
+    <div class="column-list"
+         cdkDropList
+         id="Rejected"
+         [cdkDropListData]="rejected"
+         (cdkDropListDropped)="drop($event)">
+         
+      <div class="board-card" *ngFor="let job of rejected" cdkDrag>
+        <h4>{{ job.title }}</h4>
+        <p class="company">{{ job.company }}</p>
+      </div>
+    </div>
+  </div>
+
+</div>

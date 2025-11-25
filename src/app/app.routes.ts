@@ -3,9 +3,12 @@ import { DashboardComponent } from './dashboard/dashboard';
 import { LoginComponent } from './login/login';
 import { ProfileComponent } from './profile/profile';
 import { JobFormComponent } from './job-form/job-form'; 
-import { CoverLetterComponent } from './cover-letter/cover-letter'; // <--- Import
+import { CoverLetterComponent } from './cover-letter/cover-letter'; 
+import { BoardComponent } from './board/board';
 
 export const routes: Routes = [
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'board', component: BoardComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'add-job', component: JobFormComponent },
   
