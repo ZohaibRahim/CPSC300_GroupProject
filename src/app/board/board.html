@@ -13,8 +13,14 @@
          (cdkDropListDropped)="drop($event)">
       
       <div class="board-card" *ngFor="let job of applied" cdkDrag (click)="onCardClick(job.id)">
-        <h4>{{ job.title }}</h4>
-        <p class="company">{{ job.company }}</p>
+        <div class="card-header">
+          <div class="company-avatar">{{ job.company.charAt(0) }}</div>
+          
+          <div class="card-title-group">
+            <h4>{{ job.title }}</h4>
+            <p class="company">{{ job.company }}</p>
+          </div>
+        </div>
         
         <div class="card-footer" *ngIf="job.deadline">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -40,8 +46,13 @@
          (cdkDropListDropped)="drop($event)">
          
       <div class="board-card" *ngFor="let job of interviewing" cdkDrag (click)="onCardClick(job.id)">
-        <h4>{{ job.title }}</h4>
-        <p class="company">{{ job.company }}</p>
+        <div class="card-header">
+          <div class="company-avatar">{{ job.company.charAt(0) }}</div>
+          <div class="card-title-group">
+            <h4>{{ job.title }}</h4>
+            <p class="company">{{ job.company }}</p>
+          </div>
+        </div>
 
         <div class="card-footer" *ngIf="job.deadline">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -66,8 +77,13 @@
          (cdkDropListDropped)="drop($event)">
          
       <div class="board-card" *ngFor="let job of offer" cdkDrag (click)="onCardClick(job.id)">
-        <h4>{{ job.title }}</h4>
-        <p class="company">{{ job.company }}</p>
+        <div class="card-header">
+          <div class="company-avatar">{{ job.company.charAt(0) }}</div>
+          <div class="card-title-group">
+            <h4>{{ job.title }}</h4>
+            <p class="company">{{ job.company }}</p>
+          </div>
+        </div>
 
         <div class="card-footer" *ngIf="job.deadline">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -92,8 +108,13 @@
          (cdkDropListDropped)="drop($event)">
          
       <div class="board-card" *ngFor="let job of rejected" cdkDrag (click)="onCardClick(job.id)">
-        <h4>{{ job.title }}</h4>
-        <p class="company">{{ job.company }}</p>
+        <div class="card-header">
+          <div class="company-avatar">{{ job.company.charAt(0) }}</div>
+          <div class="card-title-group">
+            <h4>{{ job.title }}</h4>
+            <p class="company">{{ job.company }}</p>
+          </div>
+        </div>
 
         <div class="card-footer" *ngIf="job.deadline">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

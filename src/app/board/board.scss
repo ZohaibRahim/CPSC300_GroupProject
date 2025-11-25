@@ -64,15 +64,39 @@
   margin-bottom: 0.75rem;
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 12px; /* Slightly softer corners */
   box-shadow: var(--shadow-sm);
-  cursor: grab;
-  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 
+  /* New Hover Effect */
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color); /* Subtle glow border */
+  }
+  
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+/* NEW: Header Layout for Avatar + Text */
+.card-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card-title-group {
+  flex: 1;
+  
   h4 {
     margin: 0 0 0.25rem 0;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
     color: var(--text-main);
+    line-height: 1.4;
   }
 
   .company {
@@ -80,15 +104,25 @@
     font-size: 0.85rem;
     color: var(--text-muted);
   }
+}
 
-  &:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-  }
+/* NEW: The Avatar Circle */
+.company-avatar {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0; /* Prevent squishing */
+  background-color: var(--bg-app);
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px; /* Squircle shape */
   
-  &:active {
-    cursor: grabbing;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
 }
 
 /* --- Drag & Drop Animations (Magic) --- */
