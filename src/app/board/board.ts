@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService, Job } from '../api.service';
+import { Router } from '@angular/router'; // <--- Import Router
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -19,16 +20,15 @@ import {
 })
 export class BoardComponent implements OnInit {
   
-  // The 4 Columns
   applied: Job[] = [];
   interviewing: Job[] = [];
   offer: Job[] = [];
   rejected: Job[] = [];
 
-  constructor(private apiService: ApiService) {}
+  // Inject Router
+  constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnInit(): void {
-    // Subscribe to the job list and sort them into columns
     this.apiService.getJobs().subscribe(jobs => {
       this.filterJobs(jobs);
     });
@@ -41,16 +41,12 @@ export class BoardComponent implements OnInit {
     this.rejected = jobs.filter(j => j.status === 'Rejected');
   }
 
-  // This function runs when you drop a card
   drop(event: CdkDragDrop<Job[]>) {
     if (event.previousContainer === event.container) {
-      // Moving within the same column (just reordering)
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // Moving to a NEW column!
       const item = event.previousContainer.data[event.previousIndex];
       
-      // 1. Visually move it immediately
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -58,11 +54,13 @@ export class BoardComponent implements OnInit {
         event.currentIndex,
       );
 
-      // 2. Determine the new status based on the column ID
-      const newStatus = event.container.id; // We will set IDs in HTML like 'Applied', 'Offer'
-      
-      // 3. Update the backend
+      const newStatus = event.container.id;
       this.apiService.updateJob(item.id, { status: newStatus }).subscribe();
     }
+  }
+
+  // --- NEW: Click Handler ---
+  onCardClick(jobId: number) {
+    this.router.navigate(['/edit-job', jobId]);
   }
 }
