@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes';
 import jobsRoutes from './routes/jobs.routes';
 import applicationsRoutes from './routes/applications.routes';
+import aiRoutes from "./routes/aiRoutes";
+
+
 
 dotenv.config();
 
@@ -24,10 +27,13 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
+app.use(express.json()); 
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobsRoutes);
 app.use('/api/applications', applicationsRoutes);
+app.use("/ai", aiRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
