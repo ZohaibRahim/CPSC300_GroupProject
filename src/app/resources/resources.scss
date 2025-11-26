@@ -198,3 +198,77 @@ h4 {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Drop shadow makes it pop */
   border: 1px solid var(--border-color);
 }
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 3rem 0;
+}
+
+/* Guides Grid Layout (Same as resumes) */
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Guide Card Style */
+.guide-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+  }
+}
+
+/* Colorful Icon Box */
+.guide-icon-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  color: white;
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Theme Gradients based on screenshot colors */
+  &.theme-pink   { background: linear-gradient(135deg, #ec4899, #db2777); }
+  &.theme-purple { background: linear-gradient(135deg, #a855f7, #9333ea); }
+  &.theme-blue   { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  &.theme-cyan   { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+  &.theme-orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+  &.theme-red    { background: linear-gradient(135deg, #ef4444, #dc2626); }
+}
+
+.guide-content {
+  h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+}

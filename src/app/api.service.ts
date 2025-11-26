@@ -28,6 +28,15 @@ export interface Job {
   deadline?: string;
 }
 
+export interface GuideResource {
+  id: number;
+  title: string;
+  description: string;
+  // 'theme' will determine the icon background color
+  theme: 'pink' | 'purple' | 'blue' | 'cyan' | 'orange' | 'red'; 
+  iconPath: string; // SVG path data for the icon inside the box
+}
+
 const BACKEND_URL = 'http://localhost:3000';
 
 @Injectable({
@@ -122,6 +131,57 @@ export class ApiService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  private mockGuides: GuideResource[] = [
+    {
+      id: 1,
+      title: 'Resume Guide',
+      description: 'Learn how to create a resume that gets past applicant tracking systems and catches recruiters\' attention.',
+      theme: 'pink',
+      // Document text icon
+      iconPath: 'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z'
+    },
+    {
+      id: 2,
+      title: 'Cover Letter Guide',
+      description: 'Master the art of writing cover letters that tell your story and showcase your personality.',
+      theme: 'purple',
+      // Envelope/Letter icon
+      iconPath: 'M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75'
+    },
+    {
+      id: 3,
+      title: 'Interview Guide',
+      description: 'Prepare for behavioral and technical interviews with proven strategies and practice questions.',
+      theme: 'blue',
+      // Chat bubbles icon
+      iconPath: 'M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z'
+    },
+    {
+      id: 4,
+      title: 'LinkedIn Guide',
+      description: 'Optimize your profile, build your network, and attract recruiters on the world\'s largest professional platform.',
+      theme: 'cyan',
+      // User Circle icon
+      iconPath: 'M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'
+    },
+    {
+      id: 5,
+      title: 'Cold Email Guide',
+      description: 'Learn templates and tactics for reaching out to hiring managers and getting responses.',
+      theme: 'orange',
+      // Paper airplane/Send icon
+      iconPath: 'M6 12 3.269 3.126A59.768 59.768 0 0 1 21.485 12 59.77 59.77 0 0 1 3.27 20.876L5.999 12zm0 0h7.5'
+    },
+    {
+      id: 6,
+      title: 'Portfolio Guide',
+      description: 'Showcase your work and projects effectively to demonstrate your skills to potential employers.',
+      theme: 'red',
+      // Briefcase/Folder icon
+      iconPath: 'M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z'
+    }
+  ];
+  
   constructor(private http: HttpClient) {
     // 1. Load Jobs
     const savedJobs = localStorage.getItem('markhor_jobs');
@@ -153,6 +213,10 @@ export class ApiService {
     }
   }
 
+  getGuides(): Observable<GuideResource[]> {
+    return of(this.mockGuides).pipe(delay(200)); // Simulate fast network call
+  }
+
   private saveState() {
     localStorage.setItem('markhor_jobs', JSON.stringify(this.mockJobList));
     localStorage.setItem('markhor_resume', this.mockMasterResume);
@@ -161,9 +225,6 @@ export class ApiService {
   // --- AUTH METHODS ---
 
   login(email: string): Observable<boolean> {
-    // For this mock, we accept any email/password if the user exists in local storage,
-    // OR we just simulate a successful login for any new user session.
-    // Let's try to find if we have a saved user, otherwise create a temporary one.
     let user = this.currentUserSubject.value;
     
     if (!user) {

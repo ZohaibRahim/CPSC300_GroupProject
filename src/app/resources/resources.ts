@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService, ResumeResource } from '../api.service';
+import { ApiService, ResumeResource, GuideResource } from '../api.service';
 
 @Component({
   selector: 'app-resources',
@@ -10,7 +10,8 @@ import { ApiService, ResumeResource } from '../api.service';
   styleUrls: ['./resources.scss']
 })
 export class ResourcesComponent implements OnInit {
-  resources: ResumeResource[] = [];
+  resumes: ResumeResource[] = [];
+  guides: GuideResource[] = []; // New property for guides
   isLoading = true;
   
   // Track which resume is currently open in the modal
@@ -19,9 +20,18 @@ export class ResourcesComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.apiService.getResources().subscribe(data => {
-      this.resources = data;
-      this.isLoading = false;
+    // ForkJoin allows us to wait for both requests to complete
+    // But for simplicity here, we'll just nest the subscriptions.
+    
+    // 1. Get Resumes
+    this.apiService.getResources().subscribe(resumeData => {
+      this.resumes = resumeData;
+      
+      // 2. Get Guides once resumes are loaded
+      this.apiService.getGuides().subscribe(guideData => {
+        this.guides = guideData;
+        this.isLoading = false;
+      });
     });
   }
 
