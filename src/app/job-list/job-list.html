@@ -23,7 +23,8 @@
           (ngModelChange)="onStatusChange($event)"
         >
           <option value="All">All Statuses</option>
-          <option value="To Apply">To Apply</option> <option value="Applied">Applied</option>
+          <option value="To Apply">To Apply</option>
+          <option value="Applied">Applied</option>
           <option value="Interviewing">Interviewing</option>
           <option value="Offer">Offer</option>
           <option value="Rejected">Rejected</option>
@@ -40,6 +41,9 @@
 
     <div class="job-card" *ngFor="let job of jobs">
       <div class="job-card-main">
+        
+        <div class="company-avatar">{{ job.company.charAt(0) }}</div>
+
         <div class="job-info">
           <h4>{{ job.title }}</h4>
           <p class="company">{{ job.company }}</p>

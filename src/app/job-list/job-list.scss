@@ -103,7 +103,26 @@ h3 {
   justify-content: space-between;
   align-items: flex-start;
   padding: 1.5rem;
-  gap: 1rem;
+  gap: 1.25rem; /* Increased gap for better spacing */
+}
+
+/* NEW: Company Avatar Style */
+.company-avatar {
+  width: 48px; /* Slightly larger than board view */
+  height: 48px;
+  flex-shrink: 0;
+  background-color: var(--bg-app);
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: uppercase;
 }
 
 .job-info {
@@ -124,21 +143,19 @@ h3 {
   color: var(--text-muted);
 }
 
-
 .job-card .deadline {
   display: flex;
   align-items: center;
-  gap: 6px; /* Space between icon and text */
-  
-  margin: 0 0 0.75rem 0; /* Same spacing as company */
+  gap: 6px;
+  margin: 0 0 0.75rem 0;
   font-size: 0.9rem;
-  color: var(--text-muted); /* Subtle color */
+  color: var(--text-muted);
   font-weight: 500;
 
   svg {
     width: 16px;
     height: 16px;
-    color: var(--primary-color); /* Nice blue accent for the icon */
+    color: var(--primary-color);
   }
 }
 
@@ -166,7 +183,7 @@ h3 {
   &.status-rejected { background-color: #ef4444; }     
 }
 
-
+/* --- Action Buttons --- */
 .actions {
   display: flex;
   gap: 0.5rem;
@@ -184,7 +201,6 @@ h3 {
   align-items: center; 
   justify-content: center;
   
-  /* Default (Light Mode) Color */
   color: var(--text-muted); 
   transition: all 0.2s;
 
@@ -211,20 +227,19 @@ h3 {
   }
 }
 
-
+/* --- DARK MODE FORCE FIX --- */
 :host-context(body.dark-theme) .btn-icon {
-  color: #ffffff !important; /* Force White Icon */
-  border-color: rgba(255, 255, 255, 0.2) !important; /* Light Border */
-  background-color: rgba(255, 255, 255, 0.05) !important; /* Light Glassy BG */
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
 
   svg {
-    stroke: #ffffff !important; /* Force SVG Lines White */
+    stroke: #ffffff !important;
   }
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.15) !important;
   }
-
 
   &.delete:hover {
     color: #ef4444 !important;
@@ -234,7 +249,7 @@ h3 {
   }
 
   &.edit:hover {
-    color: #60a5fa !important; /* Lighter Blue */
+    color: #60a5fa !important;
     border-color: #60a5fa !important;
     background-color: rgba(96, 165, 250, 0.2) !important;
     svg { stroke: #60a5fa !important; }
