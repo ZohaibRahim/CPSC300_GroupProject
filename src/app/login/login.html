@@ -1,59 +1,82 @@
-<div class="login-page-container">
-    <div class="card">
-        <!-- Title changes based on mode -->
-        <h2 class="card-title">{{ isLoginMode ? 'Sign In' : 'Create Account' }}</h2>
-
-        <form (ngSubmit)="onSubmit()">
-            
-            <!-- Email Input -->
-            <div class="input-group">
-                <label for="email">Email Address</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    [(ngModel)]="userEmail" 
-                    required 
-                    placeholder="name@example.com"
-                >
-            </div>
-
-            <!-- Password Input -->
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    [(ngModel)]="userPassword" 
-                    required
-                    minlength="6"
-                    placeholder="Min 6 characters"
-                >
-            </div>
-
-            <!-- Confirm Password Input (Only visible in Register Mode) -->
-            <div class="input-group" *ngIf="!isLoginMode">
-                <label for="passwordConfirm">Confirm Password</label>
-                <input 
-                    type="password" 
-                    id="passwordConfirm" 
-                    name="passwordConfirm" 
-                    [(ngModel)]="userPasswordConfirm" 
-                    required
-                    placeholder="Repeat password"
-                >
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn primary">
-                {{ isLoginMode ? 'Login' : 'Register' }}
-            </button>
-        </form>
-
-        <!-- Mode Toggle Button -->
-        <button type="button" class="btn secondary" (click)="toggleMode()">
-            {{ isLoginMode ? 'Need an account? Register' : 'Already registered? Sign In' }}
-        </button>
+<div class="login-layout">
+  
+  <div class="login-hero">
+    <div class="hero-overlay"></div>
+    <div class="brand-content">
+      <h1>JobTrackr.</h1>
+      <p>Plan, Track, and Land Your Dream Job.</p>
     </div>
+  </div>
+
+  <div class="form-container">
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h2>Welcome back</h2>
+        <p>Please enter your details to sign in.</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            placeholder="Enter your email"
+            [class.invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          >
+           <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-msg">
+            Please enter a valid email.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password" 
+            placeholder="••••••••"
+            [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          >
+           <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-msg">
+            Password is required.
+          </div>
+        </div>
+
+        <div class="form-actions row">
+          <label class="remember-me">
+            <input type="checkbox" formControlName="rememberMe">
+            <span>Remember me for 30 days</span>
+          </label>
+          <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Signing in...' : 'Sign in' }}
+        </button>
+
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
+        <button type="button" class="btn-social" (click)="onGoogleLogin()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
+            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+          </svg>
+          Sign in with Google
+        </button>
+
+      </form>
+
+      <div class="form-footer">
+        <p>Don't have an account? <a routerLink="/signup">Sign up for free</a></p>
+      </div>
+
+    </div>
+  </div>
 </div>
