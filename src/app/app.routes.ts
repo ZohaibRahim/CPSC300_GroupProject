@@ -4,23 +4,24 @@ import { LoginComponent } from './login/login';
 import { ProfileComponent } from './profile/profile';
 import { JobFormComponent } from './job-form/job-form'; 
 import { CoverLetterComponent } from './cover-letter/cover-letter'; 
-import { BoardComponent } from './board/board';
+import { BoardComponent } from './board/board'; 
 import { ResourcesComponent } from './resources/resources';
 import { UpdatesComponent } from './updates/updates';
 import { AnalysisComponent } from './analysis/analysis';
 
 export const routes: Routes = [
+  { path: 'login', component: LoginComponent }, // 1. Login Page
+  
+  // App Pages
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'board', component: BoardComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'analysis', component: AnalysisComponent },
   { path: 'add-job', component: JobFormComponent },
   { path: 'edit-job/:id', component: JobFormComponent },
+  { path: 'board', component: BoardComponent },
   { path: 'cover-letter', component: CoverLetterComponent },
   { path: 'resources', component: ResourcesComponent },
   { path: 'updates', component: UpdatesComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'analysis', component: AnalysisComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: '**', redirectTo: '/dashboard' } 
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' } 
 ];

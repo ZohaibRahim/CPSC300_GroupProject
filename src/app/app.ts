@@ -1,7 +1,8 @@
 import { Component, OnInit, Renderer2, Inject } from '@angular/core';
 import { DOCUMENT, CommonModule } from '@angular/common';
-import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterOutlet, RouterLinkActive, Router, NavigationEnd, Event } from '@angular/router';
 import { ApiService } from './api.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -12,22 +13,28 @@ import { ApiService } from './api.service';
 })
 export class App implements OnInit {
   isSidebarCollapsed = false;
-  isDarkMode = false; 
+  isDarkMode = false;
+  isLoginPage = false; // <-- NEW FLAG
 
   constructor(
     private apiService: ApiService,
     @Inject(DOCUMENT) private document: Document,
-    private renderer: Renderer2
-  ) {}
+    private renderer: Renderer2,
+    private router: Router // <-- Inject Router
+  ) {
+    // Listen to route changes to check if we are on the login page
+    this.router.events.pipe(
+      filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      // If the URL contains '/login', hide the sidebar layout
+      this.isLoginPage = event.urlAfterRedirects.includes('/login');
+    });
+  }
 
   ngOnInit(): void {
-    // 1. Check backend health (Existing)
     this.apiService.checkHealth().subscribe();
 
-    // 2. NEW: Load Theme Preference from LocalStorage
     const savedTheme = localStorage.getItem('theme');
-    
-    // If the user previously set it to 'dark', apply it immediately
     if (savedTheme === 'dark') {
       this.isDarkMode = true;
       this.renderer.addClass(this.document.body, 'dark-theme');
@@ -43,10 +50,10 @@ export class App implements OnInit {
 
     if (this.isDarkMode) {
       this.renderer.addClass(this.document.body, 'dark-theme');
-      localStorage.setItem('theme', 'dark'); // <--- SAVE PREFERENCE
+      localStorage.setItem('theme', 'dark');
     } else {
       this.renderer.removeClass(this.document.body, 'dark-theme');
-      localStorage.setItem('theme', 'light'); // <--- SAVE PREFERENCE
+      localStorage.setItem('theme', 'light');
     }
   }
 }
