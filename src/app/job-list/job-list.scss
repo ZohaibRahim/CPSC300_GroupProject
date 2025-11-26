@@ -208,6 +208,20 @@ h3 {
     transition: stroke 0.2s;
   }
 
+  &.analyze:hover {
+    border-color: #8b5cf6; /* Purple */
+    background-color: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+  }
+  
+  /* Dark Mode Fix */
+  :host-context(body.dark-theme) .btn-icon.analyze:hover {
+    color: #a78bfa !important;
+    border-color: #a78bfa !important;
+    background-color: rgba(139, 92, 246, 0.2) !important;
+    svg { stroke: #a78bfa !important; }
+  }
+
   &:hover {
     background-color: var(--hover-item);
     color: var(--text-main);

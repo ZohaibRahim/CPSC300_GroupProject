@@ -1,62 +1,70 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // <-- Import FormsModule
+import { FormsModule } from '@angular/forms';
 import { ApiService, Job } from '../api.service'; 
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap, catchError, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-job-list',
   standalone: true,
-  imports: [CommonModule, FormsModule], // <-- Add FormsModule here
+  imports: [CommonModule, FormsModule],
   templateUrl: './job-list.html',
   styleUrls: ['./job-list.scss']
 })
 export class JobListComponent implements OnInit {
   
-  // We'll use this purely for the HTML to subscribe to
   public filteredJobs$: Observable<Job[]>;
-
-  // Tracks the toggle state for AI analysis
   public visibleAnalysisId: number | null = null;
 
-  // --- Filters ---
-  // BehaviorSubjects allow us to emit new values whenever the user types/selects
+  // Filters
   public searchTerm$ = new BehaviorSubject<string>('');
   public statusFilter$ = new BehaviorSubject<string>('All');
 
   constructor(private apiService: ApiService, private router: Router) {
-    // Combine the 3 streams: Jobs Data, Search Term, Status Filter
+    
     this.filteredJobs$ = combineLatest([
-      this.apiService.getJobs(),
+      this.apiService.getJobs().pipe(startWith([])), // Ensure it starts with empty array if API is slow
       this.searchTerm$,
       this.statusFilter$
     ]).pipe(
+      // Debugging: Log the data coming in
+      tap(([jobs, term, status]) => console.log('Filtering:', { jobsCount: jobs.length, term, status })),
+      
       map(([jobs, searchTerm, status]) => {
-        // 1. Filter by Status first
+        // 1. Safety Check: Ensure jobs is an array
+        if (!jobs || !Array.isArray(jobs)) return [];
+
         let filtered = jobs;
-        if (status !== 'All') {
+
+        // 2. Filter by Status
+        if (status && status !== 'All') {
           filtered = filtered.filter(j => j.status === status);
         }
 
-        // 2. Filter by Search Term (Company or Title)
-        if (searchTerm.trim() !== '') {
+        // 3. Filter by Search Term
+        if (searchTerm && searchTerm.trim() !== '') {
           const lowerTerm = searchTerm.toLowerCase();
           filtered = filtered.filter(j => 
-            j.company.toLowerCase().includes(lowerTerm) || 
-            j.title.toLowerCase().includes(lowerTerm)
+            (j.company && j.company.toLowerCase().includes(lowerTerm)) || 
+            (j.title && j.title.toLowerCase().includes(lowerTerm))
           );
         }
 
         return filtered;
+      }),
+      // Error Handling: If something breaks, return empty array so app doesn't crash
+      catchError(err => {
+        console.error('Error in Job Filter:', err);
+        return [];
       })
     );
   }
 
   ngOnInit(): void { }
 
-  // Helpers to update the filters from the UI
+  // --- Filters ---
   onSearchChange(term: string) {
     this.searchTerm$.next(term);
   }
@@ -65,7 +73,7 @@ export class JobListComponent implements OnInit {
     this.statusFilter$.next(status);
   }
 
-  // --- Existing Actions ---
+  // --- Actions ---
   toggleAnalysis(jobId: number) {
     this.visibleAnalysisId = (this.visibleAnalysisId === jobId) ? null : jobId;
   }
@@ -78,5 +86,11 @@ export class JobListComponent implements OnInit {
     if(confirm('Are you sure you want to delete this application?')) {
       this.apiService.deleteJob(jobId).subscribe();
     }
+  }
+
+  onAnalyzeJob(job: Job) {
+    this.router.navigate(['/analysis'], { 
+      state: { jobDescription: job.jobDescription } 
+    });
   }
 }

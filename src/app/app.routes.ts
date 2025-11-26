@@ -7,11 +7,13 @@ import { CoverLetterComponent } from './cover-letter/cover-letter';
 import { BoardComponent } from './board/board';
 import { ResourcesComponent } from './resources/resources';
 import { UpdatesComponent } from './updates/updates';
+import { AnalysisComponent } from './analysis/analysis';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'board', component: BoardComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'analysis', component: AnalysisComponent },
   { path: 'add-job', component: JobFormComponent },
   { path: 'edit-job/:id', component: JobFormComponent },
   { path: 'cover-letter', component: CoverLetterComponent },
