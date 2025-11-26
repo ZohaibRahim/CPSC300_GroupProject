@@ -1,0 +1,52 @@
+<div class="resources-container">
+  <div class="header">
+    <h3>Resume Resources</h3>
+    <p>Explore resumes that got people hired at top companies.</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">Loading resources...</div>
+
+
+  <div class="resources-grid" *ngIf="!isLoading">
+    <div class="resource-card" *ngFor="let res of resources">
+      
+      <div class="card-thumbnail">
+        <div class="logo-wrapper">
+          <img [src]="res.thumbnailUrl" [alt]="res.company + ' Logo'" class="company-logo">
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <span class="company-tag">{{ res.company }}</span>
+        <h4>{{ res.title }}</h4>
+        <button class="view-btn" (click)="openResume(res)">View Resume</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="selectedResource" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h4>{{ selectedResource.title }}</h4>
+        <p>{{ selectedResource.company }}</p>
+      </div>
+      <button class="close-btn" (click)="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 24px; height: 24px;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      
+      <div class="resume-wrapper" *ngIf="selectedResource">
+        <img [src]="selectedResource.pdfUrl" 
+             [alt]="selectedResource.title + ' Resume'" 
+             class="resume-image">
+      </div>
+
+    </div>
+    </div>
+  </div>
+</div>

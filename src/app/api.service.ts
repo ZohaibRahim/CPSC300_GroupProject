@@ -2,6 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, delay, BehaviorSubject, tap, map, throwError } from 'rxjs';
 
+export interface ResumeResource {
+  id: number;
+  title: string;
+  company: string; 
+  thumbnailUrl: string;
+  pdfUrl: string; 
+}
+
 export interface Job {
   id: number;
   company: string;
@@ -20,7 +28,57 @@ const BACKEND_URL = 'http://localhost:3000';
 })
 export class ApiService {
 
-  // 1. Default Data (Used ONLY if LocalStorage is empty)
+  private mockResources: ResumeResource[] = [
+    {
+      id: 1,
+      title: 'Project Management Intern',
+      company: 'Google',
+      // Official Google "G" Logo
+      thumbnailUrl: '/assets/google.png', 
+      pdfUrl: '/assets/resumes/google-resume.png' 
+    },
+    {
+      id: 2,
+      title: 'Software Engineering Intern',
+      company: 'KPMG',
+      // KPMG Logo
+      thumbnailUrl: '/assets/kpmg.png',
+      pdfUrl: '/assets/resumes/kpmg-resume.png'
+    },
+    {
+      id: 3,
+      title: 'Data Analyst Intern',
+      company: 'Deloitte',
+      // Deloitte Logo
+      thumbnailUrl: '/assets/deloitte.png',
+      pdfUrl: '/assets/resumes/deloitte-resume.png'
+    },
+    {
+      id: 4,
+      title: 'Frontend Developer Intern',
+      company: 'Microsoft',
+      // Microsoft Square Logo
+      thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+      pdfUrl: '/assets/resumes/Microsoft-resume.png'
+    },
+    {
+      id: 5,
+      title: 'UX Design Intern',
+      company: 'Airbnb',
+      // Airbnb Logo
+      thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg',
+      pdfUrl: '/assets/resumes/airbnb-resume.png'
+    },
+    {
+      id: 6,
+      title: 'Cybersecurity Intern',
+      company: 'PwC',
+      // PwC Logo
+      thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/PricewaterhouseCoopers_Logo.svg/1200px-PricewaterhouseCoopers_Logo.svg.png',
+      pdfUrl: '/assets/resumes/PWC-resume.png'
+    }
+  ];
+
   private defaultJobList: Job[] = [
     {
       id: 1,
@@ -54,9 +112,6 @@ export class ApiService {
   private resume$: BehaviorSubject<string>;
 
   constructor(private http: HttpClient) {
-    // --- INITIALIZATION LOGIC ---
-    
-    // A. Load Jobs from LocalStorage
     const savedJobs = localStorage.getItem('markhor_jobs');
     if (savedJobs) {
       this.mockJobList = JSON.parse(savedJobs);
@@ -82,6 +137,11 @@ export class ApiService {
       this.mockMasterResume = savedResume;
     }
     this.resume$ = new BehaviorSubject<string>(this.mockMasterResume);
+  }
+
+  getResources(): Observable<ResumeResource[]> {
+    // Simulate fetching data
+    return of(this.mockResources).pipe(delay(300));
   }
 
   // --- HELPER: Save to LocalStorage ---

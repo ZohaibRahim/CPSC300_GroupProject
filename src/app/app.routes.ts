@@ -5,6 +5,7 @@ import { ProfileComponent } from './profile/profile';
 import { JobFormComponent } from './job-form/job-form'; 
 import { CoverLetterComponent } from './cover-letter/cover-letter'; 
 import { BoardComponent } from './board/board';
+import { ResourcesComponent } from './resources/resources';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'edit-job/:id', component: JobFormComponent },
 
   { path: 'cover-letter', component: CoverLetterComponent },
+  { path: 'resources', component: ResourcesComponent },
   { path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent },
   
