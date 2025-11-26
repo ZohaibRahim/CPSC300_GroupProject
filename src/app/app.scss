@@ -200,3 +200,80 @@
   padding: 32px; /* More breathing room */
   overflow-y: auto;
 }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 20px;
+  border-left: 1px solid var(--border-color); /* Divider from the rest */
+  height: 40px; /* Height of the divider */
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  
+  /* Hide name on small mobile screens to save space */
+  @media (max-width: 600px) {
+    display: none;
+  }
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), #8b5cf6); /* Nice gradient */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow-sm);
+  cursor: default;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.1); /* Red tint */
+    color: #ef4444; /* Red icon */
+  }
+}

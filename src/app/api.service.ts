@@ -10,6 +10,13 @@ export interface ResumeResource {
   pdfUrl: string; 
 }
 
+export interface User {
+  name: string;
+  email: string;
+  password?: string; 
+  initials: string;
+}
+
 export interface Job {
   id: number;
   company: string;
@@ -104,56 +111,104 @@ export class ApiService {
 
   private mockJobList: Job[] = [];
   private nextJobId = 1;
-  
-  // BehaviorSubjects allow us to emit new values to all subscribers
   private jobs$: BehaviorSubject<Job[]>;
 
+  // --- RESUME DATA ---
   private mockMasterResume = 'Paste your resume here...';
   private resume$: BehaviorSubject<string>;
 
+  // --- NEW: USER DATA ---
+  // We start with null (no user logged in)
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
+
   constructor(private http: HttpClient) {
+    // 1. Load Jobs
     const savedJobs = localStorage.getItem('markhor_jobs');
     if (savedJobs) {
       this.mockJobList = JSON.parse(savedJobs);
     } else {
-      // If nothing saved, use defaults
       this.mockJobList = this.defaultJobList;
     }
 
-    // B. Calculate the next ID so we don't duplicate IDs
     if (this.mockJobList.length > 0) {
       const maxId = Math.max(...this.mockJobList.map(j => j.id));
       this.nextJobId = maxId + 1;
     } else {
       this.nextJobId = 1;
     }
-
-    // Initialize the Stream
     this.jobs$ = new BehaviorSubject<Job[]>(this.mockJobList);
 
-    // C. Load Resume from LocalStorage
+    // 2. Load Resume
     const savedResume = localStorage.getItem('markhor_resume');
     if (savedResume) {
       this.mockMasterResume = savedResume;
     }
     this.resume$ = new BehaviorSubject<string>(this.mockMasterResume);
+
+    // 3. NEW: Load User
+    const savedUser = localStorage.getItem('markhor_user');
+    if (savedUser) {
+      this.currentUserSubject.next(JSON.parse(savedUser));
+    }
   }
 
-  getResources(): Observable<ResumeResource[]> {
-    // Simulate fetching data
-    return of(this.mockResources).pipe(delay(300));
-  }
-
-  // --- HELPER: Save to LocalStorage ---
   private saveState() {
     localStorage.setItem('markhor_jobs', JSON.stringify(this.mockJobList));
     localStorage.setItem('markhor_resume', this.mockMasterResume);
   }
 
-  // --- PUBLIC API METHODS ---
+  // --- AUTH METHODS ---
+
+  login(email: string): Observable<boolean> {
+    // For this mock, we accept any email/password if the user exists in local storage,
+    // OR we just simulate a successful login for any new user session.
+    // Let's try to find if we have a saved user, otherwise create a temporary one.
+    let user = this.currentUserSubject.value;
+    
+    if (!user) {
+      // If no user saved, create a mock one so they can proceed
+      user = {
+        name: 'Demo User',
+        email: email,
+        initials: 'DU'
+      };
+    }
+    
+    this.currentUserSubject.next(user);
+    localStorage.setItem('markhor_user', JSON.stringify(user));
+    return of(true).pipe(delay(800));
+  }
+
+  register(name: string, email: string): Observable<boolean> {
+    const initials = name
+      .split(' ')
+      .map(n => n[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase();
+
+    const newUser: User = {
+      name,
+      email,
+      initials
+    };
+
+    // Save to state and storage
+    this.currentUserSubject.next(newUser);
+    localStorage.setItem('markhor_user', JSON.stringify(newUser));
+
+    return of(true).pipe(delay(800));
+  }
+
+  logout() {
+    this.currentUserSubject.next(null);
+    localStorage.removeItem('markhor_user');
+  }
+
+  // --- EXISTING METHODS (Unchanged) ---
 
   checkHealth(): Observable<any> {
-    // Mocking health check since backend might not be running
     return of({ status: 'OK', message: 'Backend is reachable (mock)' });
   }
 
@@ -163,27 +218,22 @@ export class ApiService {
     if (jobData.company && jobData.company.toLowerCase() === 'fail') {
       return throwError(() => new Error('Simulated 500 Server Error: Could not save job.')).pipe(delay(500));
     }
-    
     const newJob: Job = {
       id: this.nextJobId++, ...jobData,
       aiAnalysis: 'Analysis pending...'
     };
-    
     this.mockJobList.push(newJob);
-    this.jobs$.next([...this.mockJobList]); // Update UI
-    this.saveState(); // <--- SAVE TO BROWSER
-    
+    this.jobs$.next([...this.mockJobList]);
+    this.saveState();
     return of(newJob).pipe(delay(200));
   }
 
-  getResume(): Observable<string> {
-    return this.resume$.asObservable();
-  }
+  getResume(): Observable<string> { return this.resume$.asObservable(); }
 
   saveResume(resumeText: string): Observable<{success: boolean, message: string}> {
     this.mockMasterResume = resumeText;
     this.resume$.next(this.mockMasterResume);
-    this.saveState(); // <--- SAVE TO BROWSER
+    this.saveState();
     return of({ success: true, message: 'Resume saved successfully!' }).pipe(delay(400));
   }
 
@@ -192,7 +242,7 @@ export class ApiService {
     if (index !== -1) {
       this.mockJobList.splice(index, 1);
       this.jobs$.next([...this.mockJobList]);
-      this.saveState(); // <--- SAVE TO BROWSER
+      this.saveState();
       return of(true).pipe(delay(200));
     }
     return of(false);
@@ -209,7 +259,7 @@ export class ApiService {
       const updatedJob = { ...this.mockJobList[index], ...updatedData };
       this.mockJobList[index] = updatedJob;
       this.jobs$.next([...this.mockJobList]);
-      this.saveState(); // <--- SAVE TO BROWSER
+      this.saveState();
       return of(updatedJob).pipe(delay(200));
     }
     return of(null);
@@ -220,7 +270,7 @@ export class ApiService {
       map(jobs => {
         return {
           total: jobs.length,
-          toApply: jobs.filter(j => j.status === 'To Apply').length, // <-- NEW
+          toApply: jobs.filter(j => j.status === 'To Apply').length,
           applied: jobs.filter(j => j.status === 'Applied').length,
           interviewing: jobs.filter(j => j.status === 'Interviewing').length,
           offers: jobs.filter(j => j.status === 'Offer').length
@@ -230,17 +280,20 @@ export class ApiService {
   }
 
   generateCoverLetter(jobDescription: string): Observable<{ coverLetter: string }> {
-    const mockResponse = `Dear Hiring Manager,
-
-I am writing to express my strong interest in this position. Based on the job description "${jobDescription.substring(0, 30)}...", I believe my skills in software development and my experience with Angular and Node.js make me a perfect fit for your team.
-
-I have a proven track record of delivering high-quality code and collaborating effectively in agile environments. I am particularly excited about the opportunity to contribute to your company's mission.
-
-Thank you for considering my application.
-
-Sincerely,
-[Your Name]`;
-
+    const mockResponse = `Dear Hiring Manager... (simulated response based on ${jobDescription.substring(0, 15)}...)`;
     return of({ coverLetter: mockResponse }).pipe(delay(1500));
+  }
+  
+  // Resources (Mock)
+  getResources(): Observable<any[]> {
+    const resources = [
+        { id: 1, title: 'Project Management Intern', company: 'Google', thumbnailUrl: '/assets/google.png', pdfUrl: 'mock-google-pm.pdf' },
+        { id: 2, title: 'Software Engineering Intern', company: 'KPMG', thumbnailUrl: '/assets/kpmg.png', pdfUrl: 'mock-kpmg-swe.pdf' },
+        { id: 3, title: 'Data Analyst Intern', company: 'Deloitte', thumbnailUrl: '/assets/deloitte.png', pdfUrl: 'mock-deloitte-data.pdf' },
+        { id: 4, title: 'Frontend Developer Intern', company: 'Microsoft', thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg', pdfUrl: 'mock-microsoft-fe.pdf' },
+        { id: 5, title: 'UX Design Intern', company: 'Airbnb', thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg', pdfUrl: 'mock-airbnb-ux.pdf' },
+        { id: 6, title: 'Cybersecurity Intern', company: 'PwC', thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/PricewaterhouseCoopers_Logo.svg/1200px-PricewaterhouseCoopers_Logo.svg.png', pdfUrl: 'mock-pwc-cyber.pdf' }
+    ];
+    return of(resources).pipe(delay(300));
   }
 }

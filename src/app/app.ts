@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer2, Inject } from '@angular/core';
 import { DOCUMENT, CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet, RouterLinkActive, Router, NavigationEnd, Event } from '@angular/router';
-import { ApiService } from './api.service';
+import { ApiService, User } from './api.service'; // Import User Interface
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -14,19 +14,21 @@ import { filter } from 'rxjs/operators';
 export class App implements OnInit {
   isSidebarCollapsed = false;
   isDarkMode = false;
-  isLoginPage = false; // <-- NEW FLAG
+  isLoginPage = false;
+
+  // NEW: Dynamic User Data
+  currentUser: User | null = null;
 
   constructor(
     private apiService: ApiService,
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
-    private router: Router // <-- Inject Router
+    private router: Router
   ) {
-    // Listen to route changes to check if we are on the login page
+    // Route Listener
     this.router.events.pipe(
       filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      // If the URL contains '/login', hide the sidebar layout
       this.isLoginPage = event.urlAfterRedirects.includes('/login');
     });
   }
@@ -34,11 +36,17 @@ export class App implements OnInit {
   ngOnInit(): void {
     this.apiService.checkHealth().subscribe();
 
+    // 1. Load Theme
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       this.isDarkMode = true;
       this.renderer.addClass(this.document.body, 'dark-theme');
     }
+
+    // 2. NEW: Subscribe to Current User
+    this.apiService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
   }
 
   toggleSidebar() {
@@ -47,7 +55,6 @@ export class App implements OnInit {
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
-
     if (this.isDarkMode) {
       this.renderer.addClass(this.document.body, 'dark-theme');
       localStorage.setItem('theme', 'dark');
@@ -55,5 +62,10 @@ export class App implements OnInit {
       this.renderer.removeClass(this.document.body, 'dark-theme');
       localStorage.setItem('theme', 'light');
     }
+  }
+
+  logout() {
+    this.apiService.logout(); // Call service logout
+    this.router.navigate(['/login']);
   }
 }

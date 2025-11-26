@@ -11,19 +11,33 @@
   <div class="form-container">
     <div class="form-wrapper">
       <div class="form-header">
-        <h2>Welcome back</h2>
-        <p>Please enter your details to sign in.</p>
+        <h2>{{ isLoginMode ? 'Welcome back' : 'Create an account' }}</h2>
+        <p>{{ isLoginMode ? 'Please enter your details to sign in.' : 'Start your journey with JobTrackr today.' }}</p>
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         
+        <div class="form-group" *ngIf="!isLoginMode">
+          <label for="name">Full Name</label>
+          <input 
+            type="text" 
+            id="name" 
+            formControlName="name" 
+            placeholder="e.g. Jayesh"
+            [class.invalid]="loginForm.get('name')?.invalid && loginForm.get('name')?.touched"
+          >
+           <div *ngIf="loginForm.get('name')?.invalid && loginForm.get('name')?.touched" class="error-msg">
+            Name is required.
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="email">Email address</label>
           <input 
             type="email" 
             id="email" 
             formControlName="email" 
-            placeholder="Enter your email"
+            placeholder="name@example.com"
             [class.invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
           >
            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-msg">
@@ -41,25 +55,23 @@
             [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
           >
            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-msg">
-            Password is required.
+            Password is required (min 6 chars).
           </div>
         </div>
 
-        <div class="form-actions row">
+        <div class="form-actions row" *ngIf="isLoginMode">
           <label class="remember-me">
             <input type="checkbox" formControlName="rememberMe">
-            <span>Remember me for 30 days</span>
+            <span>Remember me</span>
           </label>
           <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
         </div>
 
         <button type="submit" class="btn-primary" [disabled]="isLoading">
-          {{ isLoading ? 'Signing in...' : 'Sign in' }}
+          {{ isLoading ? 'Processing...' : (isLoginMode ? 'Sign in' : 'Sign up') }}
         </button>
 
-        <div class="divider">
-          <span>OR</span>
-        </div>
+        <div class="divider"><span>OR</span></div>
 
         <button type="button" class="btn-social" (click)="onGoogleLogin()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
@@ -68,13 +80,16 @@
             <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
             <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
           </svg>
-          Sign in with Google
+          Sign {{ isLoginMode ? 'in' : 'up' }} with Google
         </button>
 
       </form>
 
       <div class="form-footer">
-        <p>Don't have an account? <a routerLink="/signup">Sign up for free</a></p>
+        <p>
+          {{ isLoginMode ? "Don't have an account?" : "Already have an account?" }} 
+          <a href="javascript:void(0)" (click)="toggleMode()">{{ isLoginMode ? 'Sign up for free' : 'Sign in' }}</a>
+        </p>
       </div>
 
     </div>
