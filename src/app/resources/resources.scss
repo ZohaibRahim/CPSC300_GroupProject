@@ -272,3 +272,46 @@ h4 {
     line-height: 1.5;
   }
 }
+
+.guide-card {
+  /* ... existing styles ... */
+  /* Add this to push the button to the bottom if text varies in length */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100%; 
+}
+
+.guide-content {
+  /* ... existing styles ... */
+  margin-bottom: 1.5rem; /* Space between text and button */
+}
+
+/* New Button Style */
+.read-guide-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s;
+  }
+
+  &:hover {
+    color: var(--primary-hover);
+    
+    svg {
+      transform: translateX(4px); /* Nice arrow animation */
+    }
+  }
+}
