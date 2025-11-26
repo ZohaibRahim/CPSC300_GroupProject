@@ -1,21 +1,20 @@
 <div class="board-container" cdkDropListGroup>
   
   <div class="board-column">
-    <div class="column-header status-applied">
-      <h3>Applied</h3>
-      <span class="count">{{ applied.length }}</span>
+    <div class="column-header status-to-apply">
+      <h3>To Apply</h3>
+      <span class="count">{{ toApply.length }}</span>
     </div>
     
     <div class="column-list"
          cdkDropList
-         id="Applied"
-         [cdkDropListData]="applied"
+         id="To Apply" 
+         [cdkDropListData]="toApply"
          (cdkDropListDropped)="drop($event)">
       
-      <div class="board-card" *ngFor="let job of applied" cdkDrag (click)="onCardClick(job.id)">
+      <div class="board-card" *ngFor="let job of toApply" cdkDrag (click)="onCardClick(job.id)">
         <div class="card-header">
           <div class="company-avatar">{{ job.company.charAt(0) }}</div>
-          
           <div class="card-title-group">
             <h4>{{ job.title }}</h4>
             <p class="company">{{ job.company }}</p>
@@ -32,7 +31,7 @@
       
     </div>
   </div>
-
+  
   <div class="board-column">
     <div class="column-header status-interviewing">
       <h3>Interviewing</h3>

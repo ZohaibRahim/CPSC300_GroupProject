@@ -44,6 +44,7 @@
   }
 
   /* Status Lines */
+  &.status-to-apply { border-top: 4px solid #6366f1; } /* Indigo */
   &.status-applied { border-top: 4px solid #3b82f6; }
   &.status-interviewing { border-top: 4px solid #f59e0b; }
   &.status-offer { border-top: 4px solid #10b981; }

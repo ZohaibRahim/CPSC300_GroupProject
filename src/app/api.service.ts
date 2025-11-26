@@ -160,6 +160,7 @@ export class ApiService {
       map(jobs => {
         return {
           total: jobs.length,
+          toApply: jobs.filter(j => j.status === 'To Apply').length, // <-- NEW
           applied: jobs.filter(j => j.status === 'Applied').length,
           interviewing: jobs.filter(j => j.status === 'Interviewing').length,
           offers: jobs.filter(j => j.status === 'Offer').length

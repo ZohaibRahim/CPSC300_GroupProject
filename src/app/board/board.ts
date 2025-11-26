@@ -20,12 +20,13 @@ import {
 })
 export class BoardComponent implements OnInit {
   
+  // NEW Column
+  toApply: Job[] = [];
   applied: Job[] = [];
   interviewing: Job[] = [];
   offer: Job[] = [];
   rejected: Job[] = [];
 
-  // Inject Router
   constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnInit(): void {
@@ -35,6 +36,7 @@ export class BoardComponent implements OnInit {
   }
 
   filterJobs(jobs: Job[]) {
+    this.toApply = jobs.filter(j => j.status === 'To Apply'); // <-- NEW
     this.applied = jobs.filter(j => j.status === 'Applied');
     this.interviewing = jobs.filter(j => j.status === 'Interviewing');
     this.offer = jobs.filter(j => j.status === 'Offer');
@@ -46,20 +48,18 @@ export class BoardComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const item = event.previousContainer.data[event.previousIndex];
-      
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex,
       );
-
-      const newStatus = event.container.id;
+      // The new status comes from the container ID (e.g., "To Apply")
+      const newStatus = event.container.id; 
       this.apiService.updateJob(item.id, { status: newStatus }).subscribe();
     }
   }
 
-  // --- NEW: Click Handler ---
   onCardClick(jobId: number) {
     this.router.navigate(['/edit-job', jobId]);
   }

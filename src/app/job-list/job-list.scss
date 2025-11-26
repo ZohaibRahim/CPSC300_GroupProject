@@ -159,6 +159,7 @@ h3 {
   color: #fff;
   white-space: nowrap;
 
+  &.status-to { background-color: #6366f1; } /* Indigo */
   &.status-applied { background-color: #3b82f6; }      
   &.status-interviewing { background-color: #f59e0b; } 
   &.status-offer { background-color: #10b981; }        
