@@ -164,11 +164,13 @@ h4 {
 .modal-body {
   flex: 1;
   padding: 2rem;
-  overflow-y: auto;
+  overflow-y: auto;  /* Allows scrolling */
+  overflow-x: hidden; /* Prevent horizontal scroll */
   background-color: var(--bg-app);
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Start from top instead of center */
   justify-content: center;
+  min-height: 0; /* Important for flex scrolling */
 }
 
 .mock-pdf-viewer {
@@ -182,14 +184,17 @@ h4 {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-.resume-wrapper {
+.resume-image {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  background-color: var(--bg-app); /* Grey background behind the paper */
-  padding: 1rem;
+  max-width: 800px;
+  height: auto; /* Maintain aspect ratio */
+  max-height: none; /* Remove any height restrictions */
+  object-fit: contain; /* Ensure full image is visible */
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  display: block; /* Remove any inline spacing */
 }
-
 .resume-image {
   width: 100%;
   max-width: 800px; /* Standard A4 width approx */
