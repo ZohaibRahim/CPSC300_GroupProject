@@ -52,19 +52,33 @@ export class LoginComponent {
     }
 
     this.isLoading = true;
-    const { name, email } = this.loginForm.value;
+    const { name, email, password } = this.loginForm.value;
 
     if (this.isLoginMode) {
       // --- LOGIN ---
-      this.apiService.login(email).subscribe(() => {
-        this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+      this.apiService.login(email, password).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          console.error('Login error:', err);
+          // You can add error handling here (show error message to user)
+        }
       });
     } else {
       // --- REGISTER ---
-      this.apiService.register(name, email).subscribe(() => {
-        this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+      this.apiService.register(name, email, password).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          console.error('Registration error:', err);
+          // You can add error handling here (show error message to user)
+        }
       });
     }
   }

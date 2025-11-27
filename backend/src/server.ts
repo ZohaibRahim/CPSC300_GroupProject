@@ -1,13 +1,15 @@
 import express from 'express';
 import pool from './config/database';
 import jobsRouter from './routes/jobs';
-import resumesRouter from './routes/resumes';
+import resumeRouter from './routes/resume';
 import authRouter from './routes/auth';
+import cors from 'cors';
+
 
 const app = express();
 const PORT = 3000;
 
-
+app.use(cors());
 app.use(express.json());
 
 // Database
@@ -25,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/jobs', jobsRouter);
-app.use('/api/resumes', resumesRouter); 
+app.use('/api/resume', resumeRouter); 
 app.use('/api/auth', authRouter);
 
 app.listen(PORT, () => {

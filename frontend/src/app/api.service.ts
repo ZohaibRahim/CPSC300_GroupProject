@@ -224,42 +224,30 @@ export class ApiService {
 
   // --- AUTH METHODS ---
 
-  login(email: string): Observable<boolean> {
-    let user = this.currentUserSubject.value;
-    
-    if (!user) {
-      // If no user saved, create a mock one so they can proceed
-      user = {
-        name: 'Demo User',
-        email: email,
-        initials: 'DU'
-      };
-    }
-    
-    this.currentUserSubject.next(user);
-    localStorage.setItem('markhor_user', JSON.stringify(user));
-    return of(true).pipe(delay(800));
+  login(email: string, password: string): Observable<boolean> {
+    return this.http.post<{success: boolean, user: User}>(
+      `${BACKEND_URL}/api/auth/login`,
+      { email, password }
+    ).pipe(
+      tap(response => {
+        this.currentUserSubject.next(response.user);
+        localStorage.setItem('markhor_user', JSON.stringify(response.user));
+      }),
+      map(() => true)
+    );
   }
 
-  register(name: string, email: string): Observable<boolean> {
-    const initials = name
-      .split(' ')
-      .map(n => n[0])
-      .slice(0, 2)
-      .join('')
-      .toUpperCase();
-
-    const newUser: User = {
-      name,
-      email,
-      initials
-    };
-
-    // Save to state and storage
-    this.currentUserSubject.next(newUser);
-    localStorage.setItem('markhor_user', JSON.stringify(newUser));
-
-    return of(true).pipe(delay(800));
+  register(name: string, email: string, password: string): Observable<boolean> {
+    return this.http.post<{success: boolean, user: User}>(
+      `${BACKEND_URL}/api/auth/register`,
+      { name, email, password }
+    ).pipe(
+      tap(response => {
+        this.currentUserSubject.next(response.user);
+        localStorage.setItem('markhor_user', JSON.stringify(response.user));
+      }),
+      map(() => true)
+    );
   }
 
   logout() {
@@ -267,63 +255,105 @@ export class ApiService {
     localStorage.removeItem('markhor_user');
   }
 
+  // --- HELPER: Map backend snake_case to frontend camelCase ---
+  private mapJobFromBackend(job: any): Job {
+    return {
+      id: job.id,
+      company: job.company,
+      title: job.title,
+      status: job.status,
+      notes: job.notes,
+      jobDescription: job.job_description || job.jobDescription,
+      aiAnalysis: job.ai_analysis || job.aiAnalysis,
+      deadline: job.deadline
+    };
+  }
+
+  private mapJobsFromBackend(jobs: any[]): Job[] {
+    return jobs.map(job => this.mapJobFromBackend(job));
+  }
+
   // --- EXISTING METHODS (Unchanged) ---
 
   checkHealth(): Observable<any> {
-    return of({ status: 'OK', message: 'Backend is reachable (mock)' });
+    return this.http.get<any>(`${BACKEND_URL}/`);
   }
 
-  getJobs(): Observable<Job[]> { return this.jobs$.asObservable(); }
+  getJobs():  Observable<Job[]> {
+    return this.http.get<any[]>(`${BACKEND_URL}/api/jobs`).pipe(
+      map(jobs => this.mapJobsFromBackend(jobs)),
+      tap(jobs => {
+        // Update local state with real data from backend
+        this.mockJobList = jobs;
+        this.jobs$.next(jobs);
+      })
+    );
+  }
 
   createJob(jobData: any): Observable<Job> {
-    if (jobData.company && jobData.company.toLowerCase() === 'fail') {
-      return throwError(() => new Error('Simulated 500 Server Error: Could not save job.')).pipe(delay(500));
-    }
-    const newJob: Job = {
-      id: this.nextJobId++, ...jobData,
-      aiAnalysis: 'Analysis pending...'
-    };
-    this.mockJobList.push(newJob);
-    this.jobs$.next([...this.mockJobList]);
-    this.saveState();
-    return of(newJob).pipe(delay(200));
+    return this.http.post<any>(`${BACKEND_URL}/api/jobs`, jobData).pipe(
+      map(job => this.mapJobFromBackend(job)),
+      tap(newJob => {
+        // Update local state with job returned from backend
+        this.mockJobList.push(newJob);
+        this.jobs$.next([...this.mockJobList]);
+      })
+    );
   }
 
-  getResume(): Observable<string> { return this.resume$.asObservable(); }
+  getResume(): Observable<string> {
+    return this.http.get<string>(`${BACKEND_URL}/api/resume`).pipe(
+      tap(resumeText => {
+        this.mockMasterResume = resumeText;
+        this.resume$.next(resumeText);
+      })
+    );
+  }
 
   saveResume(resumeText: string): Observable<{success: boolean, message: string}> {
-    this.mockMasterResume = resumeText;
-    this.resume$.next(this.mockMasterResume);
-    this.saveState();
-    return of({ success: true, message: 'Resume saved successfully!' }).pipe(delay(400));
+    return this.http.post<{success: boolean, message: string}>(
+      `${BACKEND_URL}/api/resume`,
+      { resumeText }
+    ).pipe(
+      tap(() => {
+        this.mockMasterResume = resumeText;
+        this.resume$.next(resumeText);
+      })
+    );
   }
 
   deleteJob(id: number): Observable<boolean> {
-    const index = this.mockJobList.findIndex(j => j.id === id);
-    if (index !== -1) {
-      this.mockJobList.splice(index, 1);
-      this.jobs$.next([...this.mockJobList]);
-      this.saveState();
-      return of(true).pipe(delay(200));
-    }
-    return of(false);
+    return this.http.delete(`${BACKEND_URL}/api/jobs/${id}`).pipe(
+      tap(() => {
+        const index = this.mockJobList.findIndex(j => j.id === id);
+        if (index !== -1) {
+          this.mockJobList.splice(index, 1);
+          this.jobs$.next([...this.mockJobList]);
+        }
+      }),
+      map(() => true)
+    );
   }
 
   getJob(id: number): Observable<Job | undefined> {
-    const job = this.mockJobList.find(j => j.id === id);
-    return of(job).pipe(delay(100));
+    return this.http.get<any>(`${BACKEND_URL}/api/jobs/${id}`).pipe(
+      map(job => job ? this.mapJobFromBackend(job) : undefined)
+    );
   }
 
   updateJob(id: number, updatedData: any): Observable<Job | null> {
-    const index = this.mockJobList.findIndex(j => j.id === id);
-    if (index !== -1) {
-      const updatedJob = { ...this.mockJobList[index], ...updatedData };
-      this.mockJobList[index] = updatedJob;
-      this.jobs$.next([...this.mockJobList]);
-      this.saveState();
-      return of(updatedJob).pipe(delay(200));
-    }
-    return of(null);
+    return this.http.put<any>(`${BACKEND_URL}/api/jobs/${id}`, updatedData).pipe(
+      map(job => job ? this.mapJobFromBackend(job) : null),
+      tap(updatedJob => {
+        if (updatedJob) {
+          const index = this.mockJobList.findIndex(j => j.id === id);
+          if (index !== -1) {
+            this.mockJobList[index] = updatedJob;
+            this.jobs$.next([...this.mockJobList]);
+          }
+        }
+      })
+    );
   }
 
   getJobStats(): Observable<any> {
