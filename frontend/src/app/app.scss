@@ -197,8 +197,9 @@
 .content-area {
   flex: 1;
   background-color: var(--bg-app);
-  padding: 32px; /* More breathing room */
+  padding: 32px;
   overflow-y: auto;
+  zoom: 0.84; /* Zoom all pages to 85% */
 }
 
 .header-right {
