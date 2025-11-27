@@ -15,6 +15,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   isLoginMode = true; // Start in Login Mode
+  errorMessage = ''; // Store error message to display
 
   constructor(
     private fb: FormBuilder, 
@@ -34,6 +35,7 @@ export class LoginComponent {
     this.isLoginMode = !this.isLoginMode;
     // Reset form validity when switching modes
     this.loginForm.reset();
+    this.errorMessage = ''; // Clear error when switching modes
   }
 
   onSubmit() {
@@ -52,6 +54,7 @@ export class LoginComponent {
     }
 
     this.isLoading = true;
+    this.errorMessage = ''; // Clear previous errors
     const { name, email, password } = this.loginForm.value;
 
     if (this.isLoginMode) {
@@ -63,8 +66,9 @@ export class LoginComponent {
         },
         error: (err) => {
           this.isLoading = false;
+          // Extract error message from HTTP error response
+          this.errorMessage = err.error?.error || err.error?.message || 'Login failed. Please check your credentials.';
           console.error('Login error:', err);
-          // You can add error handling here (show error message to user)
         }
       });
     } else {
@@ -76,8 +80,9 @@ export class LoginComponent {
         },
         error: (err) => {
           this.isLoading = false;
+          // Extract error message from HTTP error response
+          this.errorMessage = err.error?.error || err.error?.message || 'Registration failed. Please try again.';
           console.error('Registration error:', err);
-          // You can add error handling here (show error message to user)
         }
       });
     }

@@ -15,6 +15,11 @@
         <p>{{ isLoginMode ? 'Please enter your details to sign in.' : 'Start your journey with JobTrackr today.' }}</p>
       </div>
 
+      <!-- Error Message Display -->
+      <div *ngIf="errorMessage" class="error-alert">
+        {{ errorMessage }}
+      </div>
+
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         
         <div class="form-group" *ngIf="!isLoginMode">

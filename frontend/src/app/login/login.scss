@@ -127,6 +127,17 @@
   margin-top: 0.4rem;
 }
 
+.error-alert {
+  background-color: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 /* Actions Row (Remember Me / Forgot) */
 .form-actions.row {
   display: flex;
