@@ -376,15 +376,7 @@ export class ApiService {
   }
   
   // Resources (Mock)
-  getResources(): Observable<any[]> {
-    const resources = [
-        { id: 1, title: 'Project Management Intern', company: 'Google', thumbnailUrl: '/assets/google.png', pdfUrl: 'mock-google-pm.pdf' },
-        { id: 2, title: 'Software Engineering Intern', company: 'KPMG', thumbnailUrl: '/assets/kpmg.png', pdfUrl: 'mock-kpmg-swe.pdf' },
-        { id: 3, title: 'Data Analyst Intern', company: 'Deloitte', thumbnailUrl: '/assets/deloitte.png', pdfUrl: 'mock-deloitte-data.pdf' },
-        { id: 4, title: 'Frontend Developer Intern', company: 'Microsoft', thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg', pdfUrl: 'mock-microsoft-fe.pdf' },
-        { id: 5, title: 'UX Design Intern', company: 'Airbnb', thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg', pdfUrl: 'mock-airbnb-ux.pdf' },
-        { id: 6, title: 'Cybersecurity Intern', company: 'PwC', thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/PricewaterhouseCoopers_Logo.svg/1200px-PricewaterhouseCoopers_Logo.svg.png', pdfUrl: 'mock-pwc-cyber.pdf' }
-    ];
-    return of(resources).pipe(delay(300));
+  getResources(): Observable<ResumeResource[]> {
+    return of(this.mockResources).pipe(delay(300));
   }
 }
