@@ -120,7 +120,7 @@ export class ApiService {
 
   private mockJobList: Job[] = [];
   private nextJobId = 1;
-  private jobs$: BehaviorSubject<Job[]>;
+  public jobs$: BehaviorSubject<Job[]>;
 
   // --- RESUME DATA ---
   private mockMasterResume = 'Paste your resume here...';

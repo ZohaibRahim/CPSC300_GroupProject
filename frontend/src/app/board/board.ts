@@ -30,9 +30,13 @@ export class BoardComponent implements OnInit {
   constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnInit(): void {
-    this.apiService.getJobs().subscribe(jobs => {
+    // Subscribe to jobs$ instead of calling getJobs() once
+    this.apiService.jobs$.subscribe(jobs => {
       this.filterJobs(jobs);
     });
+    
+    // Also load jobs initially
+    this.apiService.getJobs().subscribe();
   }
 
   filterJobs(jobs: Job[]) {
@@ -48,15 +52,35 @@ export class BoardComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const item = event.previousContainer.data[event.previousIndex];
+      const newStatus = event.container.id; // Get new status from container ID
+      
+      // Optimistically update UI first for immediate feedback
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex,
       );
-      // The new status comes from the container ID (e.g., "To Apply")
-      const newStatus = event.container.id; 
-      this.apiService.updateJob(item.id, { status: newStatus }).subscribe();
+      
+      // Update backend with complete job object
+      this.apiService.updateJob(item.id, {
+        company: item.company,
+        title: item.title,
+        status: newStatus,
+        notes: item.notes || null,
+        jobDescription: item.jobDescription || '',
+        aiAnalysis: item.aiAnalysis || null,
+        deadline: item.deadline || null
+      }).subscribe({
+        next: () => {
+          // Success - jobs$ subscription will refresh and correct any inconsistencies
+        },
+        error: (err) => {
+          // On error, refresh from backend to revert UI
+          console.error('Failed to update job status:', err);
+          this.apiService.getJobs().subscribe();
+        }
+      });
     }
   }
 
