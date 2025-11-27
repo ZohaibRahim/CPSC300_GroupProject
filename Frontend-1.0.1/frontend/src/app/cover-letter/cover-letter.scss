@@ -1,0 +1,57 @@
+/* Reuse the global clean form styles */
+@import '../job-form/job-form.scss';
+
+/* --- Result Section Styles --- */
+.result-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px dashed var(--border-color);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h4 {
+    margin: 0;
+    color: var(--text-main);
+    font-size: 1.2rem;
+  }
+}
+
+.copy-btn {
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-color);
+  color: var(--primary-color);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--hover-item);
+    border-color: var(--primary-color);
+  }
+}
+
+.letter-content {
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1.5rem;
+  white-space: pre-wrap; /* Preserves line breaks */
+  font-family: 'Inter', sans-serif;
+  line-height: 1.7;
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
