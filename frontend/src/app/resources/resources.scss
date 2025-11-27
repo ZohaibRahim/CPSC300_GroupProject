@@ -258,6 +258,9 @@ h4 {
 }
 
 .guide-content {
+  flex: 1; /* Take available space */
+  margin-bottom: 1.5rem; /* Space before button */
+  
   h4 {
     font-size: 1.2rem;
     font-weight: 700;
@@ -272,15 +275,24 @@ h4 {
     line-height: 1.5;
   }
 }
-
+/* Guide Card Style */
 .guide-card {
-  /* ... existing styles ... */
-  /* Add this to push the button to the bottom if text varies in length */
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: flex-start;
-  height: 100%; 
+  transition: all 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+  min-height: 200px; /* Add minimum height */
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+  }
 }
 
 .guide-content {
