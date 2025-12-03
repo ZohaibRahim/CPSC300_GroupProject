@@ -1,8 +1,0 @@
-// We can just re-use the same styles from the job-form!
-@import '../job-form/job-form.scss';
-
-// Add a little extra style for this specific page if needed
-:host {
-  display: block;
-  width: 100%;
-}
