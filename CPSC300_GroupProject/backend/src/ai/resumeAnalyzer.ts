@@ -13,7 +13,6 @@ export interface AnalysisOutput {
   matched_skills: string[];
   summary: string;
   keyword_density: number;
-  experience_match: number;
   ai_suggestions?: string;
 }
 

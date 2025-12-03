@@ -6,7 +6,6 @@ export interface MatchResult {
   matched_skills: string[];
   summary: string;
   keyword_density: number;
-  experience_match: number;
 }
 
 /**
@@ -63,16 +62,10 @@ export class SkillMatcher {
       resumeText
     );
 
-    const experienceMatch = this.calculateExperienceMatch(
-      jobDescription,
-      resumeText
-    );
-
     const summary = this.generateSummary(
       matchScore,
       matchedSkills.length,
-      missingSkills.length,
-      experienceMatch
+      missingSkills.length
     );
 
     return {
@@ -80,8 +73,7 @@ export class SkillMatcher {
       missing_skills: missingSkills,
       matched_skills: matchedSkills,
       summary,
-      keyword_density: keywordDensity,
-      experience_match: experienceMatch
+      keyword_density: keywordDensity
     };
   }
 
@@ -345,48 +337,10 @@ export class SkillMatcher {
     return Math.round((totalOccurrences / wordCount) * 1000) / 10;
   }
 
-  private calculateExperienceMatch(jobDesc: string, resume: string): number {
-    const jobExpMatch = jobDesc.match(/(\d+)[\+\-–]?(\d+)?\s*(?:years?|yrs?)/i);
-
-    // If job doesn’t specify years, treat as 100% match (no constraint)
-    if (!jobExpMatch) return 100;
-
-    const requiredMin = parseInt(jobExpMatch[1]);
-    const requiredMax = jobExpMatch[2] ? parseInt(jobExpMatch[2]) : requiredMin;
-
-    const resumeExpMatches = resume.match(
-      /(\d+)[\+\-–]?(\d+)?\s*(?:years?|yrs?)/gi
-    );
-    if (!resumeExpMatches || resumeExpMatches.length === 0) return 0;
-
-    let candidateYears = 0;
-    for (const match of resumeExpMatches) {
-      const years = parseInt(match.match(/\d+/)?.[0] || '0');
-      // Skip unrealistic values (0, negative, or > 50 years)
-      if (years <= 0 || years > 50) continue;
-      if (years > candidateYears) candidateYears = years;
-    }
-
-    if (candidateYears >= requiredMax) return 100;
-
-    if (candidateYears >= requiredMin) {
-      const denom = requiredMax - requiredMin || 1;
-      const progress = (candidateYears - requiredMin) / denom;
-      return Math.round(80 + progress * 20);
-    }
-
-    const ratio = candidateYears / requiredMin;
-    if (ratio >= 0.75) return 70;
-    if (ratio >= 0.5) return 50;
-    if (ratio >= 0.25) return 30;
-    return 10;
-  }
-
   private generateSummary(
     score: number,
     matched: number,
-    missing: number,
-    experienceMatch: number
+    missing: number
   ): string {
     let summary = '';
 
@@ -398,16 +352,6 @@ export class SkillMatcher {
       summary = `Moderate match. ${matched} skills aligned, but ${missing} important skills missing.`;
     } else {
       summary = `Limited match. Only ${matched} skills found.`;
-    }
-
-    if (experienceMatch < 100 && experienceMatch > 0) {
-      if (experienceMatch >= 70) {
-        summary += ` Experience level is close to requirements.`;
-      } else if (experienceMatch >= 40) {
-        summary += ` Some experience gap exists.`;
-      } else {
-        summary += ` Significant experience gap noted.`;
-      }
     }
 
     if (missing > 0 && score >= 60) {
