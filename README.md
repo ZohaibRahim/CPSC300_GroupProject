@@ -1,59 +1,82 @@
-# MarkhorFrontend
+# CPSC300 Group Project
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+A full-stack application with Angular frontend and Node.js/Express backend.
 
-## Development server
+## Prerequisites
 
-To start a local development server, run:
+- Node.js (v18 or higher)
+- npm or yarn
+- PostgreSQL database
 
+## Quick Start
+
+### 1. Install Dependencies
+
+**Backend:**
 ```bash
+cd backend
+npm install
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+```
+
+### 2. Setup Environment Variables
+
+Create a `.env` file in the `backend/` directory with your database credentials:
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=your_database_name
+DB_USER=your_username
+DB_PASSWORD=your_password
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-2.5-flash
+```
+
+### 3. Run the Application
+
+Open **two terminals**:
+
+**Terminal 1 - Backend:**
+```bash
+cd backend
+npm run dev
+```
+Backend runs on `http://localhost:3000`
+
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
 ng serve
 ```
+Frontend runs on `http://localhost:4200`
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open your browser and navigate to `http://localhost:4200`
 
-## Code scaffolding
+## Project Structure
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+├── backend/          # Node.js/Express API
+│   ├── src/
+│   └── .env         # Database configuration (create this)
+├── frontend/         # Angular application
+└── README.md
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Important Notes
 
-```bash
-ng generate --help
-```
+- Make sure your `.env` file is in the `backend/` directory
+- Never commit `.env` files to Git (already in `.gitignore`)
+- Backend must be running before using the frontend
+- Database must be set up and running before starting the backend
 
-## Building
+## Troubleshooting
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Backend won't start**: Check your `.env` file and database connection
+- **Frontend can't connect**: Make sure backend is running on port 3000
+- **Port already in use**: Stop other services using ports 3000 or 4200
