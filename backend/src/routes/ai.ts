@@ -39,7 +39,6 @@ router.post('/analyze', async (req, res) => {
       matched_skills: Array.isArray(result.matched_skills) ? result.matched_skills : [],
       summary: String(result.summary ?? ''),
       keyword_density: Number(result.keyword_density ?? 0),
-      experience_match: Number(result.experience_match ?? 0),
       ai_suggestions: result.ai_suggestions || null,  // Use || instead of typeof check
     };
 
