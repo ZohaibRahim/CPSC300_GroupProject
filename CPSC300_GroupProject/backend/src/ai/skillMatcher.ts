@@ -362,7 +362,9 @@ export class SkillMatcher {
     let candidateYears = 0;
     for (const match of resumeExpMatches) {
       const years = parseInt(match.match(/\d+/)?.[0] || '0');
-      if (years > 50) continue; // Skip unrealistic values
+      // Skip unrealistic values (0, negative, or > 50 years)
+      if (years <= 0 || years > 50) continue;
+      if (years > candidateYears) candidateYears = years;
     }
 
     if (candidateYears >= requiredMax) return 100;
