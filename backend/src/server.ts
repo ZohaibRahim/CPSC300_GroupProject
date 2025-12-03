@@ -3,8 +3,11 @@ import pool from './config/database';
 import jobsRouter from './routes/jobs';
 import resumeRouter from './routes/resume';
 import authRouter from './routes/auth';
+import aiRouter from './routes/ai';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 const app = express();
 const PORT = 3000;
@@ -29,8 +32,9 @@ app.get('/', (req, res) => {
 app.use('/api/jobs', jobsRouter);
 app.use('/api/resume', resumeRouter); 
 app.use('/api/auth', authRouter);
+app.use('/ai', aiRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
+//made all the changes to the server.ts file
