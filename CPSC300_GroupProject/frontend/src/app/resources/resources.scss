@@ -1,0 +1,334 @@
+.resources-container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.header {
+  margin-bottom: 2.5rem;
+  h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+  }
+  p { color: var(--text-muted); }
+}
+
+/* --- Grid Layout --- */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+/* --- Card Styling --- */
+.resource-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.card-thumbnail {
+  height: 140px;
+  background-color: var(--bg-app); /* Subtle grey background */
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.logo-wrapper {
+  width: 80px;
+  height: 80px;
+  background-color: white;
+  border-radius: 12px; /* Squircle shape */
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px; /* Inner padding so logo doesn't touch edges */
+}
+
+.company-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Ensures logo scales nicely without stretching */
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.company-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 99px;
+  margin-bottom: 0.75rem;
+}
+
+h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.4;
+}
+
+.view-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--primary-color);
+  background-color: transparent;
+  color: var(--primary-color);
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
+}
+
+/* --- MODAL STYLES --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  
+  /* FIX: Added webkit prefix for better compatibility */
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background-color: var(--bg-card);
+  width: 90%;
+  max-width: 800px;
+  height: 85vh; /* Tall modal for resumes */
+  border-radius: 16px;
+  box-shadow: var(--shadow-md); /* Fixed variable name from shadow-lg to match global */
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  
+  h4 { 
+    margin: 0; 
+    font-size: 1.25rem; 
+    color: var(--text-main);
+  }
+  p { 
+    margin: 0.25rem 0 0 0; 
+    color: var(--text-muted); 
+  }
+}
+
+.close-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  border-radius: 50%;
+  &:hover { background-color: var(--bg-app); color: var(--text-main); }
+}
+
+.modal-body {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;  /* Allows scrolling */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  background-color: var(--bg-app);
+  display: flex;
+  align-items: flex-start; /* Start from top instead of center */
+  justify-content: center;
+  min-height: 0; /* Important for flex scrolling */
+}
+
+.mock-pdf-viewer {
+  text-align: center;
+  padding: 3rem;
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  color: var(--text-main);
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.resume-image {
+  width: 100%;
+  max-width: 800px;
+  height: auto; /* Maintain aspect ratio */
+  max-height: none; /* Remove any height restrictions */
+  object-fit: contain; /* Ensure full image is visible */
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  display: block; /* Remove any inline spacing */
+}
+.resume-image {
+  width: 100%;
+  max-width: 800px; /* Standard A4 width approx */
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Drop shadow makes it pop */
+  border: 1px solid var(--border-color);
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 3rem 0;
+}
+
+/* Guides Grid Layout (Same as resumes) */
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Guide Card Style */
+.guide-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+  }
+}
+
+/* Colorful Icon Box */
+.guide-icon-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  color: white;
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Theme Gradients based on screenshot colors */
+  &.theme-pink   { background: linear-gradient(135deg, #ec4899, #db2777); }
+  &.theme-purple { background: linear-gradient(135deg, #a855f7, #9333ea); }
+  &.theme-blue   { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  &.theme-cyan   { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+  &.theme-orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+  &.theme-red    { background: linear-gradient(135deg, #ef4444, #dc2626); }
+}
+
+.guide-content {
+  flex: 1; /* Take available space */
+  margin-bottom: 1.5rem; /* Space before button */
+  
+  h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+}
+/* Guide Card Style */
+.guide-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+  min-height: 200px; /* Add minimum height */
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+  }
+}
+
+.guide-content {
+  /* ... existing styles ... */
+  margin-bottom: 1.5rem; /* Space between text and button */
+}
+
+/* New Button Style */
+.read-guide-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s;
+  }
+
+  &:hover {
+    color: var(--primary-hover);
+    
+    svg {
+      transform: translateX(4px); /* Nice arrow animation */
+    }
+  }
+}

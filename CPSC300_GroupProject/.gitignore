@@ -1,0 +1,6 @@
+.cursor/rules/rules.mdc
+
+backend/node_modules/
+.env
+node_modules/
+.angular/

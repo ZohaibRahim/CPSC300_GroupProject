@@ -1,0 +1,382 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, delay, BehaviorSubject, tap, map, throwError } from 'rxjs';
+
+export interface ResumeResource {
+  id: number;
+  title: string;
+  company: string; 
+  thumbnailUrl: string;
+  pdfUrl: string; 
+}
+
+export interface User {
+  name: string;
+  email: string;
+  password?: string; 
+  initials: string;
+}
+
+export interface Job {
+  id: number;
+  company: string;
+  title: string;
+  status: string;
+  notes?: string;
+  jobDescription?: string;
+  aiAnalysis?: string;
+  deadline?: string;
+}
+
+export interface GuideResource {
+  id: number;
+  title: string;
+  description: string;
+  theme: 'pink' | 'purple' | 'blue' | 'cyan' | 'orange' | 'red'; 
+  iconPath: string;
+  linkUrl: string; 
+}
+
+const BACKEND_URL = 'http://localhost:3000';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+
+  private mockResources: ResumeResource[] = [
+    {
+      id: 1,
+      title: 'Project Management Intern',
+      company: 'Google',
+      // Official Google "G" Logo
+      thumbnailUrl: '/assets/google.png', 
+      pdfUrl: '/assets/resumes/google-resume.png' 
+    },
+    {
+      id: 2,
+      title: 'Software Engineering Intern',
+      company: 'KPMG',
+      // KPMG Logo
+      thumbnailUrl: '/assets/kpmg.png',
+      pdfUrl: '/assets/resumes/kpmg-resume.png'
+    },
+    {
+      id: 3,
+      title: 'Data Analyst Intern',
+      company: 'Deloitte',
+      // Deloitte Logo
+      thumbnailUrl: '/assets/deloitte.png',
+      pdfUrl: '/assets/resumes/deloitte-resume.png'
+    },
+    {
+      id: 4,
+      title: 'Frontend Developer Intern',
+      company: 'Microsoft',
+      // Microsoft Square Logo
+      thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+      pdfUrl: '/assets/resumes/Microsoft-resume.png'
+    },
+    {
+      id: 5,
+      title: 'UX Design Intern',
+      company: 'Airbnb',
+      // Airbnb Logo
+      thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg',
+      pdfUrl: '/assets/resumes/airbnb-resume.png'
+    },
+    {
+      id: 6,
+      title: 'Cybersecurity Intern',
+      company: 'PwC',
+      // PwC Logo
+      thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/PricewaterhouseCoopers_Logo.svg/1200px-PricewaterhouseCoopers_Logo.svg.png',
+      pdfUrl: '/assets/resumes/PWC-resume.png'
+    }
+  ];
+
+  private defaultJobList: Job[] = [
+    {
+      id: 1,
+      company: 'Google',
+      title: 'Software Engineer',
+      status: 'Interviewing',
+      notes: 'First round done.',
+      jobDescription: 'Seeking a SWE with 5+ years of Go.',
+      aiAnalysis: 'Your resume is a 92% match.',
+      deadline: '2025-12-31'
+    },
+    {
+      id: 2,
+      company: 'Microsoft',
+      title: 'Frontend Developer',
+      status: 'Applied',
+      notes: 'Sent resume.',
+      jobDescription: 'Requires strong React and TypeScript skills.',
+      aiAnalysis: 'Your resume is a 78% match.',
+      deadline: '2025-11-30'
+    }
+  ];
+
+  private mockJobList: Job[] = [];
+  private nextJobId = 1;
+  public jobs$: BehaviorSubject<Job[]>;
+
+  // --- RESUME DATA ---
+  private mockMasterResume = 'Paste your resume here...';
+  private resume$: BehaviorSubject<string>;
+
+  // --- NEW: USER DATA ---
+  // We start with null (no user logged in)
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
+
+  private mockGuides: GuideResource[] = [
+    {
+      id: 1,
+      title: 'Resume Guide',
+      description: 'Learn how to create a resume that gets past applicant tracking systems.',
+      theme: 'pink',
+      iconPath: 'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z',
+      linkUrl: 'https://careerservices.fas.harvard.edu/resources/create-a-strong-resume/'
+    },
+    {
+      id: 2,
+      title: 'Cover Letter Guide',
+      description: 'Master the art of writing cover letters that tell your story.',
+      theme: 'purple',
+      iconPath: 'M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75',
+      linkUrl: 'https://www.uc.edu/news/articles/2024/11/standout-cover-letter-guide.html' 
+    },
+    {
+      id: 3,
+      title: 'Interview Guide',
+      description: 'Prepare for behavioral and technical interviews with proven strategies.',
+      theme: 'blue',
+      iconPath: 'M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z',
+      linkUrl: 'https://studentlife.utoronto.ca/wp-content/uploads/Interview-Strategies-Guide.pdf'
+    },
+    {
+      id: 4,
+      title: 'LinkedIn Guide',
+      description: 'Optimize your profile, build your network, and attract recruiters.',
+      theme: 'cyan',
+      iconPath: 'M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+      linkUrl: 'https://www.linkedin.com/business/sales/blog/profile-best-practices/17-steps-to-a-better-linkedin-profile-in-2017'
+    },
+    {
+      id: 5,
+      title: 'Cold Email Guide',
+      description: 'Learn templates and tactics for reaching out to hiring managers.',
+      theme: 'orange',
+      iconPath: 'M6 12 3.269 3.126A59.768 59.768 0 0 1 21.485 12 59.77 59.77 0 0 1 3.27 20.876L5.999 12zm0 0h7.5',
+      linkUrl: 'https://carly.substack.com/p/how-to-write-a-cold-email'
+    },
+    {
+      id: 6,
+      title: 'Portfolio Guide',
+      description: 'Showcase your work effectively to demonstrate your skills.',
+      theme: 'red',
+      iconPath: 'M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z',
+      linkUrl: 'https://www.wix.com/blog/how-to-make-online-design-portfolio-guide?experiment_id=%5E%5E119cefc7-5e4d-4e47-949f-b91a1674bc1c%5E'
+    }
+  ];
+  
+  constructor(private http: HttpClient) {
+    // 1. Load Jobs
+    const savedJobs = localStorage.getItem('markhor_jobs');
+    if (savedJobs) {
+      this.mockJobList = JSON.parse(savedJobs);
+    } else {
+      this.mockJobList = this.defaultJobList;
+    }
+
+    if (this.mockJobList.length > 0) {
+      const maxId = Math.max(...this.mockJobList.map(j => j.id));
+      this.nextJobId = maxId + 1;
+    } else {
+      this.nextJobId = 1;
+    }
+    this.jobs$ = new BehaviorSubject<Job[]>(this.mockJobList);
+
+    // 2. Load Resume
+    const savedResume = localStorage.getItem('markhor_resume');
+    if (savedResume) {
+      this.mockMasterResume = savedResume;
+    }
+    this.resume$ = new BehaviorSubject<string>(this.mockMasterResume);
+
+    // 3. NEW: Load User
+    const savedUser = localStorage.getItem('markhor_user');
+    if (savedUser) {
+      this.currentUserSubject.next(JSON.parse(savedUser));
+    }
+  }
+
+  getGuides(): Observable<GuideResource[]> {
+    return of(this.mockGuides).pipe(delay(200)); // Simulate fast network call
+  }
+
+  private saveState() {
+    localStorage.setItem('markhor_jobs', JSON.stringify(this.mockJobList));
+    localStorage.setItem('markhor_resume', this.mockMasterResume);
+  }
+
+  // --- AUTH METHODS ---
+
+  login(email: string, password: string): Observable<boolean> {
+    return this.http.post<{success: boolean, user: User}>(
+      `${BACKEND_URL}/api/auth/login`,
+      { email, password }
+    ).pipe(
+      tap(response => {
+        this.currentUserSubject.next(response.user);
+        localStorage.setItem('markhor_user', JSON.stringify(response.user));
+      }),
+      map(() => true)
+    );
+  }
+
+  register(name: string, email: string, password: string): Observable<boolean> {
+    return this.http.post<{success: boolean, user: User}>(
+      `${BACKEND_URL}/api/auth/register`,
+      { name, email, password }
+    ).pipe(
+      tap(response => {
+        this.currentUserSubject.next(response.user);
+        localStorage.setItem('markhor_user', JSON.stringify(response.user));
+      }),
+      map(() => true)
+    );
+  }
+
+  logout() {
+    this.currentUserSubject.next(null);
+    localStorage.removeItem('markhor_user');
+  }
+
+  // --- HELPER: Map backend snake_case to frontend camelCase ---
+  private mapJobFromBackend(job: any): Job {
+    return {
+      id: job.id,
+      company: job.company,
+      title: job.title,
+      status: job.status,
+      notes: job.notes,
+      jobDescription: job.job_description || job.jobDescription,
+      aiAnalysis: job.ai_analysis || job.aiAnalysis,
+      deadline: job.deadline
+    };
+  }
+
+  private mapJobsFromBackend(jobs: any[]): Job[] {
+    return jobs.map(job => this.mapJobFromBackend(job));
+  }
+
+  // --- EXISTING METHODS (Unchanged) ---
+
+  checkHealth(): Observable<any> {
+    return this.http.get<any>(`${BACKEND_URL}/`);
+  }
+
+  getJobs():  Observable<Job[]> {
+    return this.http.get<any[]>(`${BACKEND_URL}/api/jobs`).pipe(
+      map(jobs => this.mapJobsFromBackend(jobs)),
+      tap(jobs => {
+        // Update local state with real data from backend
+        this.mockJobList = jobs;
+        this.jobs$.next(jobs);
+      })
+    );
+  }
+
+  createJob(jobData: any): Observable<Job> {
+    return this.http.post<any>(`${BACKEND_URL}/api/jobs`, jobData).pipe(
+      map(job => this.mapJobFromBackend(job)),
+      tap(newJob => {
+        // Update local state with job returned from backend
+        this.mockJobList.push(newJob);
+        this.jobs$.next([...this.mockJobList]);
+      })
+    );
+  }
+
+  getResume(): Observable<string> {
+    return this.http.get<string>(`${BACKEND_URL}/api/resume`).pipe(
+      tap(resumeText => {
+        this.mockMasterResume = resumeText;
+        this.resume$.next(resumeText);
+      })
+    );
+  }
+
+  saveResume(resumeText: string): Observable<{success: boolean, message: string}> {
+    return this.http.post<{success: boolean, message: string}>(
+      `${BACKEND_URL}/api/resume`,
+      { resumeText }
+    ).pipe(
+      tap(() => {
+        this.mockMasterResume = resumeText;
+        this.resume$.next(resumeText);
+      })
+    );
+  }
+
+  deleteJob(id: number): Observable<boolean> {
+    return this.http.delete(`${BACKEND_URL}/api/jobs/${id}`).pipe(
+      tap(() => {
+        const index = this.mockJobList.findIndex(j => j.id === id);
+        if (index !== -1) {
+          this.mockJobList.splice(index, 1);
+          this.jobs$.next([...this.mockJobList]);
+        }
+      }),
+      map(() => true)
+    );
+  }
+
+  getJob(id: number): Observable<Job | undefined> {
+    return this.http.get<any>(`${BACKEND_URL}/api/jobs/${id}`).pipe(
+      map(job => job ? this.mapJobFromBackend(job) : undefined)
+    );
+  }
+
+  updateJob(id: number, updatedData: any): Observable<Job | null> {
+    return this.http.put<any>(`${BACKEND_URL}/api/jobs/${id}`, updatedData).pipe(
+      map(job => job ? this.mapJobFromBackend(job) : null),
+      tap(updatedJob => {
+        if (updatedJob) {
+          const index = this.mockJobList.findIndex(j => j.id === id);
+          if (index !== -1) {
+            this.mockJobList[index] = updatedJob;
+            this.jobs$.next([...this.mockJobList]);
+          }
+        }
+      })
+    );
+  }
+
+  getJobStats(): Observable<any> {
+    return this.jobs$.pipe(
+      map(jobs => {
+        return {
+          total: jobs.length,
+          toApply: jobs.filter(j => j.status === 'To Apply').length,
+          applied: jobs.filter(j => j.status === 'Applied').length,
+          interviewing: jobs.filter(j => j.status === 'Interviewing').length,
+          offers: jobs.filter(j => j.status === 'Offer').length
+        };
+      })
+    );
+  }
+
+  generateCoverLetter(jobDescription: string): Observable<{ coverLetter: string }> {
+    const mockResponse = `Dear Hiring Manager... (simulated response based on ${jobDescription.substring(0, 15)}...)`;
+    return of({ coverLetter: mockResponse }).pipe(delay(1500));
+  }
+  
+  // Resources (Mock)
+  getResources(): Observable<ResumeResource[]> {
+    return of(this.mockResources).pipe(delay(300));
+  }
+}
